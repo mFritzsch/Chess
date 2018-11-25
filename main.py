@@ -20,16 +20,17 @@ def start_game(board_pieces):
     # board_pieces[62] = 3
     # board_pieces[58] = 2
     # board_pieces[61] = 2
-    # board_pieces[59] = 1
+    board_pieces[59] = 1
     board_pieces[60] = 0
 
 
 white_king = pieces.WhiteKing()
+white_queen = pieces.WhiteQueen()
 
 all_sprites = pygame.sprite.Group()
-all_sprites.add(white_king)
+all_sprites.add(white_king, white_queen)
 
-existing_pieces = [white_king]
+existing_pieces = [white_king, white_queen]
 
 def draw_board():
     # draws the outlines of the board
