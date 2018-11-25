@@ -12,6 +12,7 @@ pieces = [pygame.image.load("sprites/white_king.png"), pygame.image.load("sprite
           pygame.image.load("sprites/white_bishop.png"), pygame.image.load("sprites/white_knight.png"),
           pygame.image.load("sprites/white_rook.png"), pygame.image.load("sprites/white_pawn.png")]
 
+
 def start_game(board_pieces):
     for i in range(8):
         board_pieces[49 + i] = 5
@@ -23,6 +24,20 @@ def start_game(board_pieces):
     board_pieces[61] = 2
     board_pieces[59] = 1
     board_pieces[60] = 0
+
+
+class white_king(pygame.sprite.Sprite):
+    def __init__(self, x, y):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = pygame.image.load("sprites/white_king.png")
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y
+white_king_group = pygame.sprite.Group()
+white_king1 = white_king(50, 50)
+all_sprites = pygame.sprite.Group()
+all_sprites.add(white_king1)
+
 
 def draw_board():
     # draws the outlines of the board
@@ -36,7 +51,10 @@ def draw_board():
             if (i + j) % 2 == 0:
                 pygame.draw.rect(win, (255, 255, 255), (25 + 100 * i, 25 + 100 * j, 100, 100))
             if board_pieces[i*j] != -1:
-                win.blit(pieces[board_pieces[i*j]], (i, j))
+                continue
+    all_sprites.draw(win)
+
+
 while True:
     if rounds == 0:
         start_game(board_pieces)
