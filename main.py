@@ -13,24 +13,31 @@ board_pieces = [-1] * 64
 
 def start_game(board_pieces):
     # for i in range(8):
-    #     board_pieces[49 + i] = 5
-    # board_pieces[56] = 4
-    # board_pieces[63] = 4
-    # board_pieces[57] = 3
-    # board_pieces[62] = 3
-    # board_pieces[58] = 2
-    # board_pieces[61] = 2
+    #     board_pieces[49 + i] = 8+1
+    board_pieces[56] = 7
+    board_pieces[63] = 6
+    board_pieces[57] = 5
+    board_pieces[62] = 4
+    board_pieces[58] = 3
+    board_pieces[61] = 2
     board_pieces[59] = 1
     board_pieces[60] = 0
 
 
 white_king = pieces.WhiteKing()
 white_queen = pieces.WhiteQueen()
+white_bishop1 = pieces.WhiteBishop()
+white_bishop2 = pieces.WhiteBishop()
+white_knight1 = pieces.WhiteKnight()
+white_knight2 = pieces.WhiteKnight()
+white_rook1 = pieces.WhiteRook()
+white_rook2 = pieces.WhiteRook()
+
 
 all_sprites = pygame.sprite.Group()
-all_sprites.add(white_king, white_queen)
-
-existing_pieces = [white_king, white_queen]
+existing_pieces = [white_king, white_queen, white_bishop1, white_bishop2, white_knight1, white_knight2,
+                   white_rook1, white_rook2]
+all_sprites.add(existing_pieces)
 
 def draw_board():
     # draws the outlines of the board
