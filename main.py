@@ -1,4 +1,5 @@
 import pygame
+import pieces
 
 pygame.init()
 
@@ -8,36 +9,26 @@ pygame.display.set_caption("chess")
 rounds = 0
 run = True
 board_pieces = [-1] * 64
-pieces = [pygame.image.load("sprites/white_king.png"), pygame.image.load("sprites/white_queen.png"),
-          pygame.image.load("sprites/white_bishop.png"), pygame.image.load("sprites/white_knight.png"),
-          pygame.image.load("sprites/white_rook.png"), pygame.image.load("sprites/white_pawn.png")]
 
 
 def start_game(board_pieces):
-    for i in range(8):
-        board_pieces[49 + i] = 5
-    board_pieces[56] = 4
-    board_pieces[63] = 4
-    board_pieces[57] = 3
-    board_pieces[62] = 3
-    board_pieces[58] = 2
-    board_pieces[61] = 2
-    board_pieces[59] = 1
+    # for i in range(8):
+    #     board_pieces[49 + i] = 5
+    # board_pieces[56] = 4
+    # board_pieces[63] = 4
+    # board_pieces[57] = 3
+    # board_pieces[62] = 3
+    # board_pieces[58] = 2
+    # board_pieces[61] = 2
+    # board_pieces[59] = 1
     board_pieces[60] = 0
 
 
-class white_king(pygame.sprite.Sprite):
-    def __init__(self, x, y):
-        pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.image.load("sprites/white_king.png")
-        self.rect = self.image.get_rect()
-        self.rect.x = x
-        self.rect.y = y
-white_king_group = pygame.sprite.Group()
-white_king1 = white_king(50, 50)
+white_king = pieces.white_king(50, 50)
 all_sprites = pygame.sprite.Group()
-all_sprites.add(white_king1)
+all_sprites.add(white_king)
 
+existing_pieces = [white_king]
 
 def draw_board():
     # draws the outlines of the board
@@ -50,9 +41,13 @@ def draw_board():
         for j in range(8):
             if (i + j) % 2 == 0:
                 pygame.draw.rect(win, (255, 255, 255), (25 + 100 * i, 25 + 100 * j, 100, 100))
-            if board_pieces[i*j] != -1:
-                continue
+            else:
+                pygame.draw.rect(win, (50, 50, 50), (25 + 100 * i, 25 + 100 * j, 100, 100))
+            if board_pieces[i*8+j] == 0:
+                existing_pieces[board_pieces[i*8+j]].set_x_and_y(25 + 100 * j, 25 + 100 * i)
+
     all_sprites.draw(win)
+    all_sprites.update()
 
 
 while True:
