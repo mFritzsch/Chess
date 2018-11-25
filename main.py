@@ -8,9 +8,9 @@ pygame.display.set_caption("chess")
 rounds = 0
 run = True
 board_pieces = [-1] * 64
-pieces = [pygame.image.load("white_king.png"), pygame.image.load("white_queen.png"),
-          pygame.image.load("white_bishop.png"), pygame.image.load("white_knight.png"),
-          pygame.image.load("white_rook.png"), pygame.image.load("white_pawn.png")]
+pieces = [pygame.image.load("sprites/white_king.png"), pygame.image.load("sprites/white_queen.png"),
+          pygame.image.load("sprites/white_bishop.png"), pygame.image.load("sprites/white_knight.png"),
+          pygame.image.load("sprites/white_rook.png"), pygame.image.load("sprites/white_pawn.png")]
 
 def start_game(board_pieces):
     for i in range(8):
