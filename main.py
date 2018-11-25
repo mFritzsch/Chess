@@ -24,7 +24,8 @@ def start_game(board_pieces):
     board_pieces[60] = 0
 
 
-white_king = pieces.white_king(50, 50)
+white_king = pieces.WhiteKing()
+
 all_sprites = pygame.sprite.Group()
 all_sprites.add(white_king)
 
@@ -43,7 +44,7 @@ def draw_board():
                 pygame.draw.rect(win, (255, 255, 255), (25 + 100 * i, 25 + 100 * j, 100, 100))
             else:
                 pygame.draw.rect(win, (50, 50, 50), (25 + 100 * i, 25 + 100 * j, 100, 100))
-            if board_pieces[i*8+j] == 0:
+            if board_pieces[i*8+j] != -1:
                 existing_pieces[board_pieces[i*8+j]].set_x_and_y(25 + 100 * j, 25 + 100 * i)
 
     all_sprites.draw(win)
