@@ -72,6 +72,10 @@ while True:
         start_game(board_pieces)
     draw_board()
     pygame.display.update()
+    for event in pygame.event.get():
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            x_pos, y_pos = pygame.mouse.get_pos()
+            print((x_pos, y_pos))
 pygame.quit()
 
 # sizes:
