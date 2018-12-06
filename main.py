@@ -15,7 +15,7 @@ def start_game(board_pieces):
     for i in range(8):
         board_pieces[48 + i] = 8+i
     board_pieces[56] = 7
-    board_pieces[63] = 6
+    board_pieces[17] = 6
     board_pieces[57] = 5
     board_pieces[62] = 4
     board_pieces[58] = 3
@@ -47,6 +47,7 @@ existing_pieces = [white_king, white_queen, white_bishop1, white_bishop2, white_
                    white_pawn6, white_pawn7, white_pawn8]
 all_sprites.add(existing_pieces)
 
+
 def draw_board():
     # draws the outlines of the board
     pygame.draw.rect(win, (255, 255, 255), (20, 20, 5, 810))
@@ -62,11 +63,11 @@ def draw_board():
                 pygame.draw.rect(win, (50, 50, 50), (25 + 100 * i, 25 + 100 * j, 100, 100))
             if board_pieces[i*8+j] != -1:
                 existing_pieces[board_pieces[i*8+j]].set_x_and_y(25 + 100 * j, 25 + 100 * i)
+            if board_pieces[i+8*j] == -2:
+                pygame.draw.rect(win, (200, 0, 0), (25 + 100 * i, 25 + 100 * j, 100, 100))
 
     all_sprites.draw(win)
     all_sprites.update()
-
-
 while True:
     if rounds == 0:
         start_game(board_pieces)
@@ -75,14 +76,7 @@ while True:
     for event in pygame.event.get():
         if event.type == pygame.MOUSEBUTTONDOWN:
             x_pos, y_pos = pygame.mouse.get_pos()
-            print((x_pos, y_pos))
+            if (int(x_pos / 100)) + 8 * (int(y_pos / 100)) < 64:
+                board_pieces = existing_pieces[board_pieces[(int(x_pos / 100)) + 8 * (int(y_pos / 100))]].possible_moves(board_pieces)
 pygame.quit()
-
-# sizes:
-# king=77*80
-# queen=82*80
-# bishop=89*80
-# knight=88*80
-# rook=85*80
-# pawn=82*80
 

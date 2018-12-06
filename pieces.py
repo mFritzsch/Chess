@@ -41,6 +41,48 @@ class WhiteRook(AnyPiece):
         self.image = pygame.image.load("sprites/white_rook.png")
         self.rect = self.image.get_rect()
 
+    def possible_moves(self, board):
+        x = int((self.rect.x - 25) / 100)
+        y = int((self.rect.y - 25) / 100)
+        i = 1
+        if (x + i + y * 8) < 64:
+            while board[x + i + y * 8] == -1:
+                if (x + i + y * 8) < 64:
+                    board[x + i + y * 8] = -2
+                    if ((x + i + y * 8) + 1) % 8 == 0:
+                        break
+                    i += 1
+                else:
+                    break
+        i = 1
+        if (x - i + y * 8) > 0:
+            while board[x - i + y * 8] == -1:
+                if (x - i + y * 8) > -1:
+                    board[x - i + y * 8] = -2
+                    if (x - i + y * 8) % 8 == 0:
+                        break
+                    i += 1
+                else:
+                    break
+        i = 1
+        if (x + (y + i) * 8) < 64:
+            while board[x + (y + i) * 8] == -1:
+                if (x + i + (y - i) * 8) < 64:
+                    board[x + (y + i) * 8] = -2
+                    i += 1
+                else:
+                    break
+        i = 1
+        if (x + (y - i) * 8) > 0:
+            while board[x + (y - i) * 8] == -1:
+                if (x + (y - i) * 8) > -1:
+                    board[x + (y - i) * 8] = -2
+                    i += 1
+                else:
+                    break
+        print(board)
+        return board
+
 
 class WhitePawn(AnyPiece):
     def __init__(self):
