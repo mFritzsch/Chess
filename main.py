@@ -15,7 +15,7 @@ def start_game(board_pieces):
     for i in range(8):
         board_pieces[48 + i] = 8+i
     board_pieces[56] = 7
-    board_pieces[17] = 6
+    board_pieces[18] = 6
     board_pieces[57] = 5
     board_pieces[62] = 4
     board_pieces[58] = 3
