@@ -12,16 +12,10 @@ board_pieces = [-1] * 64
 
 
 def start_game(board_pieces):
-    for i in range(8):
-        board_pieces[48 + i] = 8+i
-    board_pieces[56] = 7
-    board_pieces[18] = 6
-    board_pieces[57] = 5
-    board_pieces[62] = 4
-    board_pieces[58] = 3
-    board_pieces[61] = 2
-    board_pieces[59] = 1
-    board_pieces[60] = 0
+    for i in range(16):
+        board_pieces[48 + i] = i +2
+    for i in range(16):
+        board_pieces[i] = -i -3
 
 
 white_king = pieces.WhiteKing()
@@ -41,10 +35,31 @@ white_pawn6 = pieces.WhitePawn()
 white_pawn7 = pieces.WhitePawn()
 white_pawn8 = pieces.WhitePawn()
 
+black_king = pieces.BlackKing()
+black_queen = pieces.BlackQueen()
+black_bishop1 = pieces.BlackBishop()
+black_bishop2 = pieces.BlackBishop()
+black_knight1 = pieces.BlackKnight()
+black_knight2 = pieces.BlackKnight()
+black_rook1 = pieces.BlackRook()
+black_rook2 = pieces.BlackRook()
+black_pawn1 = pieces.BlackPawn()
+black_pawn2 = pieces.BlackPawn()
+black_pawn3 = pieces.BlackPawn()
+black_pawn4 = pieces.BlackPawn()
+black_pawn5 = pieces.BlackPawn()
+black_pawn6 = pieces.BlackPawn()
+black_pawn7 = pieces.BlackPawn()
+black_pawn8 = pieces.BlackPawn()
+
 all_sprites = pygame.sprite.Group()
-existing_pieces = [white_king, white_queen, white_bishop1, white_bishop2, white_knight1, white_knight2,
-                   white_rook1, white_rook2, white_pawn1, white_pawn2, white_pawn3, white_pawn4, white_pawn5,
-                   white_pawn6, white_pawn7, white_pawn8]
+existing_pieces = [white_pawn1, white_pawn2, white_pawn3, white_pawn4, white_pawn5,
+                   white_pawn6, white_pawn7, white_pawn8, white_rook1, white_knight1, white_queen, white_king,
+                   white_bishop1, white_knight2, white_bishop2, white_rook2,
+                   black_pawn1, black_pawn2, black_pawn3, black_pawn4, black_pawn5,
+                   black_pawn6, black_pawn7, black_pawn8, black_rook1, black_knight1, black_queen, black_king,
+                   black_bishop1, black_knight2, black_bishop2, black_rook2,
+                   ]
 all_sprites.add(existing_pieces)
 
 
@@ -61,9 +76,11 @@ def draw_board():
                 pygame.draw.rect(win, (255, 255, 255), (25 + 100 * i, 25 + 100 * j, 100, 100))
             else:
                 pygame.draw.rect(win, (50, 50, 50), (25 + 100 * i, 25 + 100 * j, 100, 100))
-            if board_pieces[i*8+j] != -1:
-                existing_pieces[board_pieces[i*8+j]].set_x_and_y(25 + 100 * j, 25 + 100 * i)
-            if board_pieces[i+8*j] == -2:
+            if board_pieces[i*8+j] > 1:
+                existing_pieces[board_pieces[i*8+j] - 2].set_x_and_y(25 + 100 * j, 25 + 100 * i)
+            if board_pieces[i*8+j] < -1:
+                existing_pieces[board_pieces[i*8+j] + 2].set_x_and_y(25 + 100 * j, 25 + 100 * i)
+            if board_pieces[i+8*j] == 1:
                 pygame.draw.rect(win, (200, 0, 0), (25 + 100 * i, 25 + 100 * j, 100, 100))
 
     all_sprites.draw(win)

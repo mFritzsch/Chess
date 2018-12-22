@@ -7,10 +7,24 @@ class AnyPiece(pygame.sprite.Sprite):
         self.rect.y = new_y
 
 
+class BlackKing(AnyPiece):
+    def __init__(self):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = pygame.image.load("sprites/black_king.png")
+        self.rect = self.image.get_rect()
+
+
 class WhiteKing(AnyPiece):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.image.load("sprites/white_king.png")
+        self.rect = self.image.get_rect()
+
+
+class BlackQueen(AnyPiece):
+    def __init__(self):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = pygame.image.load("sprites/black_queen.png")
         self.rect = self.image.get_rect()
 
 
@@ -21,6 +35,13 @@ class WhiteQueen(AnyPiece):
         self.rect = self.image.get_rect()
 
 
+class BlackBishop(AnyPiece):
+    def __init__(self):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = pygame.image.load("sprites/black_bishop.png")
+        self.rect = self.image.get_rect()
+
+
 class WhiteBishop(AnyPiece):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
@@ -28,10 +49,24 @@ class WhiteBishop(AnyPiece):
         self.rect = self.image.get_rect()
 
 
+class BlackKnight(AnyPiece):
+    def __init__(self):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = pygame.image.load("sprites/black_knight.png")
+        self.rect = self.image.get_rect()
+
+
 class WhiteKnight(AnyPiece):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.image.load("sprites/white_knight.png")
+        self.rect = self.image.get_rect()
+
+
+class BlackRook(AnyPiece):
+    def __init__(self):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = pygame.image.load("sprites/black_rook.png")
         self.rect = self.image.get_rect()
 
 
@@ -82,6 +117,13 @@ class WhiteRook(AnyPiece):
                     break
         print(board)
         return board
+
+
+class BlackPawn(AnyPiece):
+    def __init__(self):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = pygame.image.load("sprites/black_pawn.png")
+        self.rect = self.image.get_rect()
 
 
 class WhitePawn(AnyPiece):
