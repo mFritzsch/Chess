@@ -53,12 +53,12 @@ black_pawn7 = pieces.BlackPawn()
 black_pawn8 = pieces.BlackPawn()
 
 all_sprites = pygame.sprite.Group()
-existing_pieces = [white_pawn1, white_pawn2, white_pawn3, white_pawn4, white_pawn5,
-                   white_pawn6, white_pawn7, white_pawn8, white_rook1, white_knight1, white_queen, white_king,
-                   white_bishop1, white_knight2, white_bishop2, white_rook2,
-                   black_pawn1, black_pawn2, black_pawn3, black_pawn4, black_pawn5,
-                   black_pawn6, black_pawn7, black_pawn8, black_rook1, black_knight1, black_queen, black_king,
-                   black_bishop1, black_knight2, black_bishop2, black_rook2,
+existing_pieces = [white_pawn1, white_pawn2, white_pawn3, white_pawn4, white_pawn5, white_pawn6, white_pawn7,
+                   white_pawn8, white_rook1, white_knight1, white_bishop1, white_queen, white_king,white_bishop2,
+                   white_knight2, white_rook2,
+                   black_pawn1, black_pawn2, black_pawn3, black_pawn4, black_pawn5, black_pawn6, black_pawn7,
+                   black_pawn8, black_rook1, black_knight1, black_bishop1, black_king, black_queen, black_bishop2,
+                   black_knight2, black_rook2,
                    ]
 all_sprites.add(existing_pieces)
 
