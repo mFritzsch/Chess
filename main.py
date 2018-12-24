@@ -8,14 +8,14 @@ pygame.display.set_caption("chess")
 
 rounds = 0
 run = True
-board_pieces = [-1] * 64
+board = [0] * 64
 
 
-def start_game(board_pieces):
+def start_game(board):
     for i in range(16):
-        board_pieces[48 + i] = i +2
+        board[48 + i] = i + 2
     for i in range(16):
-        board_pieces[i] = -i -3
+        board[i] = -i - 3
 
 
 white_king = pieces.WhiteKing()
@@ -63,6 +63,15 @@ existing_pieces = [white_pawn1, white_pawn2, white_pawn3, white_pawn4, white_paw
 all_sprites.add(existing_pieces)
 
 
+def check_square(x, y):
+    if board[int(x / 100) + 8 * (int(y / 100))] < -1:
+        piece = existing_pieces[board[(int(x / 100)) + 8 * (int(y / 100))] + 2]
+        return piece
+    elif board[int(x / 100) + 8 * (int(y / 100))] > 1:
+        piece = existing_pieces[board[(int(x / 100)) + 8 * (int(y / 100))] - 2]
+        return piece
+
+
 def draw_board():
     # draws the outlines of the board
     pygame.draw.rect(win, (255, 255, 255), (20, 20, 5, 810))
@@ -76,24 +85,49 @@ def draw_board():
                 pygame.draw.rect(win, (255, 255, 255), (25 + 100 * i, 25 + 100 * j, 100, 100))
             else:
                 pygame.draw.rect(win, (50, 50, 50), (25 + 100 * i, 25 + 100 * j, 100, 100))
-            if board_pieces[i*8+j] > 1:
-                existing_pieces[board_pieces[i*8+j] - 2].set_x_and_y(25 + 100 * j, 25 + 100 * i)
-            if board_pieces[i*8+j] < -1:
-                existing_pieces[board_pieces[i*8+j] + 2].set_x_and_y(25 + 100 * j, 25 + 100 * i)
-            if board_pieces[i+8*j] == 1:
+            if board[i*8+j] > 1:
+                existing_pieces[board[i*8+j] - 2].set_x_and_y(25 + 100 * j, 25 + 100 * i)
+            if board[i*8+j] < -1:
+                existing_pieces[board[i*8+j] + 2].set_x_and_y(25 + 100 * j, 25 + 100 * i)
+            if board[i+8*j] == 1:
                 pygame.draw.rect(win, (200, 0, 0), (25 + 100 * i, 25 + 100 * j, 100, 100))
 
-    all_sprites.draw(win)
+
     all_sprites.update()
+    all_sprites.draw(win)
+
+
 while True:
     if rounds == 0:
-        start_game(board_pieces)
+        start_game(board)
     draw_board()
     pygame.display.update()
     for event in pygame.event.get():
         if event.type == pygame.MOUSEBUTTONDOWN:
             x_pos, y_pos = pygame.mouse.get_pos()
-            if (int(x_pos / 100)) + 8 * (int(y_pos / 100)) < 64:
-                board_pieces = existing_pieces[board_pieces[(int(x_pos / 100)) + 8 * (int(y_pos / 100))]].possible_moves(board_pieces)
-pygame.quit()
+            if board[(int(x_pos / 100)) + 8 * (int(y_pos / 100))] == 1:
+                for i in range(len(board)):
+                    if existing_pieces[board[i]-2].selected:
+                        existing_pieces[board[i]-2].selected = False
+                        board[(int(x_pos / 100)) + 8 * (int(y_pos / 100))] = board[i]
+                        board[i] = 0
+                        for j in range(len(board)):
+                            if board[j] == 1:
+                                board[j] = 0
+                        break
+            elif (int(x_pos / 100)) + 8 * (int(y_pos / 100)) < 64:
+                if 1 < board[(int(x_pos / 100)) + 8 * (int(y_pos / 100))] or \
+                        board[(int(x_pos / 100)) + 8 * (int(y_pos / 100))] < -1:
+                    for i in range(len(existing_pieces)):
+                        if existing_pieces[i].selected:
+                            existing_pieces[i].selected = False
+                            for j in range(len(board)):
+                                if board[j] == 1:
+                                    board[j] = 0
+                    check_square(x_pos, y_pos).selected = True
+    for i in range(len(existing_pieces)):
+        if existing_pieces[i].selected:
+            board = existing_pieces[i].possible_moves(board)
+    rounds += 1
 
+pygame.quit()
