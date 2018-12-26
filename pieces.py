@@ -89,14 +89,14 @@ class WhiteRook(AnyPiece):
         self.image = pygame.image.load("sprites/white_rook.png")
         self.rect = self.image.get_rect()
 
-    def possible_moves(self, board):
+    def possible_moves(self, move_board):
         x = int((self.rect.x - 25) / 100)
         y = int((self.rect.y - 25) / 100)
         i = 1
         if (x + i + y * 8) < 64:
-            while board[x + i + y * 8] == -1:
+            while move_board[x + i + y * 8] == -1:
                 if (x + i + y * 8) < 64:
-                    board[x + i + y * 8] = -2
+                    move_board[x + i + y * 8] = -2
                     if ((x + i + y * 8) + 1) % 8 == 0:
                         break
                     i += 1
@@ -104,9 +104,9 @@ class WhiteRook(AnyPiece):
                     break
         i = 1
         if (x - i + y * 8) > 0:
-            while board[x - i + y * 8] == -1:
+            while move_board[x - i + y * 8] == -1:
                 if (x - i + y * 8) > -1:
-                    board[x - i + y * 8] = -2
+                    move_board[x - i + y * 8] = -2
                     if (x - i + y * 8) % 8 == 0:
                         break
                     i += 1
@@ -114,21 +114,21 @@ class WhiteRook(AnyPiece):
                     break
         i = 1
         if (x + (y + i) * 8) < 64:
-            while board[x + (y + i) * 8] == -1:
+            while move_board[x + (y + i) * 8] == -1:
                 if (x + i + (y - i) * 8) < 64:
-                    board[x + (y + i) * 8] = -2
+                    move_board[x + (y + i) * 8] = -2
                     i += 1
                 else:
                     break
         i = 1
         if (x + (y - i) * 8) > 0:
-            while board[x + (y - i) * 8] == -1:
+            while move_board[x + (y - i) * 8] == -1:
                 if (x + (y - i) * 8) > -1:
-                    board[x + (y - i) * 8] = -2
+                    move_board[x + (y - i) * 8] = -2
                     i += 1
                 else:
                     break
-        return board
+        return move_board
 
 
 class BlackPawn(AnyPiece):
@@ -149,15 +149,18 @@ class WhitePawn(AnyPiece):
     def possible_moves(self, board):
         x = int((self.rect.x - 25) / 100)
         y = int((self.rect.y - 25) / 100)
+        move_board = board[:]
+        if move_board[(x+y*8)-8] == 0:
+            move_board[(x + y * 8)-8] = 1
+            if y == 6 and move_board[(x+y*8)-16] == 0:
+                move_board[(x + y * 8) - 16] = 1
 
-        if board[(x+y*8)-8] == 0:
-            board[(x + y * 8)-8] = 1
-            if y == 6 and board[(x+y*8)-16] == 0:
-                board[(x + y * 8) - 16] = 1
+        if move_board[(x+y*8)-9] < -1:
+            move_board[(x + y * 8) - 9] = 1
 
-        if board[(x+y*8)-9] < -1:
-            board[(x + y * 8) - 9] = 1
+        if move_board[(x+y*8)-7] < -1:
+            move_board[(x + y * 8) - 7] = 1
 
-        if board[(x+y*8)-7] < -1:
-            board[(x + y * 8) - 7] = 1
-        return board
+
+        return move_board
+
