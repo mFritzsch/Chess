@@ -93,27 +93,50 @@ def draw_board():
             if move_board[i+8*j] == 1:
                 pygame.draw.rect(win, (200, 0, 0), (25 + 100 * i, 25 + 100 * j, 100, 100))
 
-
     all_sprites.update()
     all_sprites.draw(win)
 
 
-def move_piece(board, move_board, existing_pieces):
+# do I need this?
+def hostile(a, b):
+    if a.colour == "white":
+        if b.colour == "black":
+            return True
+    else:
+        if b.colour == "white":
+            return True
+
+
+def move_piece(board, move_board, existing_pieces, rounds):
     for event in pygame.event.get():
         if event.type == pygame.MOUSEBUTTONDOWN:
             x_pos, y_pos = pygame.mouse.get_pos()
             if (int(x_pos / 100)) + 8 * (int(y_pos / 100)) < 64:
                 if move_board[(int(x_pos / 100)) + 8 * (int(y_pos / 100))] == 1:
+                    rounds += 1
                     for i in range(len(board)):
-                        # needs to be changed
-                        if existing_pieces[board[i]-2].selected:
-                            existing_pieces[board[i]-2].selected = False
-                            board[(int(x_pos / 100)) + 8 * (int(y_pos / 100))] = board[i]
-                            board[i] = 0
-                            for j in range(len(move_board)):
-                                if move_board[j] == 1:
-                                    move_board[j] = 0
-                            break
+                        if board[i] > 0:
+                            if existing_pieces[board[i]-2].selected:
+                                existing_pieces[board[i]-2].selected = False
+                                if board[(int(x_pos / 100)) + 8 * (int(y_pos / 100))] != 0:
+                                    all_sprites.remove(existing_pieces[board[(int(x_pos / 100)) + 8 * (int(y_pos / 100))] + 2])
+                                board[(int(x_pos / 100)) + 8 * (int(y_pos / 100))] = board[i]
+                                board[i] = 0
+                                for j in range(len(move_board)):
+                                    if move_board[j] == 1:
+                                        move_board[j] = 0
+                                break
+                        else:
+                            if existing_pieces[board[i]+2].selected:
+                                existing_pieces[board[i]+2].selected = False
+                                if board[(int(x_pos / 100)) + 8 * (int(y_pos / 100))] != 0:
+                                    all_sprites.remove(existing_pieces[board[(int(x_pos / 100)) + 8 * (int(y_pos / 100))] - 2])
+                                board[(int(x_pos / 100)) + 8 * (int(y_pos / 100))] = board[i]
+                                board[i] = 0
+                                for j in range(len(move_board)):
+                                    if move_board[j] == 1:
+                                        move_board[j] = 0
+                                break
 
                 elif board[(int(x_pos / 100)) + 8 * (int(y_pos / 100))] != 0:
                     for i in range(len(existing_pieces)):
@@ -122,25 +145,25 @@ def move_piece(board, move_board, existing_pieces):
                             for j in range(len(move_board)):
                                 if move_board[j] == 1:
                                     move_board[j] = 0
-                    check_square(x_pos, y_pos).selected = True
+                    if check_square(x_pos, y_pos).colour == "white" and rounds % 2 == 0 or \
+                            check_square(x_pos, y_pos).colour == "black" and rounds % 2 != 0:
+                        check_square(x_pos, y_pos).selected = True
     for i in range(len(existing_pieces)):
         if existing_pieces[i].selected:
 
 
             move_board = existing_pieces[i].possible_moves(board)
-            print(move_board is board)
             for j in range(len(move_board)):
                 if move_board[j] != 0 and move_board[j] != 1:
                     move_board[j] = 0
-    return board, move_board, existing_pieces
+    return board, move_board, existing_pieces, rounds
 
 while True:
     if rounds == 0:
         start_game(board)
     draw_board()
     pygame.display.update()
-    board, move_board, existing_pieces = move_piece(board, move_board, existing_pieces)
-    rounds += 1
+    board, move_board, existing_pieces, rounds = move_piece(board, move_board, existing_pieces, rounds)
     if rounds % 1 == 0:
         # print(move_board)
         # print(board)
