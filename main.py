@@ -113,11 +113,11 @@ def move_piece(board, move_board, existing_pieces, rounds):
             x_pos, y_pos = pygame.mouse.get_pos()
             if (int(x_pos / 100)) + 8 * (int(y_pos / 100)) < 64:
                 if move_board[(int(x_pos / 100)) + 8 * (int(y_pos / 100))] == 1:
-                    rounds += 1
                     for i in range(len(board)):
-                        if board[i] > 0:
+                        if board[i] > 1:
                             if existing_pieces[board[i]-2].selected:
                                 existing_pieces[board[i]-2].selected = False
+                                rounds += 1
                                 if board[(int(x_pos / 100)) + 8 * (int(y_pos / 100))] != 0:
                                     all_sprites.remove(existing_pieces[board[(int(x_pos / 100)) + 8 * (int(y_pos / 100))] + 2])
                                 board[(int(x_pos / 100)) + 8 * (int(y_pos / 100))] = board[i]
@@ -126,9 +126,10 @@ def move_piece(board, move_board, existing_pieces, rounds):
                                     if move_board[j] == 1:
                                         move_board[j] = 0
                                 break
-                        else:
+                        elif board[i] < -1:
                             if existing_pieces[board[i]+2].selected:
                                 existing_pieces[board[i]+2].selected = False
+                                rounds += 1
                                 if board[(int(x_pos / 100)) + 8 * (int(y_pos / 100))] != 0:
                                     all_sprites.remove(existing_pieces[board[(int(x_pos / 100)) + 8 * (int(y_pos / 100))] - 2])
                                 board[(int(x_pos / 100)) + 8 * (int(y_pos / 100))] = board[i]

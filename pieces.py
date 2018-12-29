@@ -29,6 +29,18 @@ class BlackKing(Black):
         self.image = pygame.image.load("sprites/black_king.png")
         self.rect = self.image.get_rect()
 
+    def possible_moves(self, board):
+        x = int((self.rect.x - 25) / 100)
+        y = int((self.rect.y - 25) / 100)
+        move_board = board[:]
+
+        for i in range(3):
+            for j in range(3):
+                if 0 < (x + y * 8 - 9) + i + 8 * j < 64 and 8 > (x-1) + i > -1:
+                    if move_board[(x + y * 8 - 9) + i + 8 * j] == 0 or move_board[(x + y * 8 - 9) + i + 8 * j] > 1:
+                        move_board[(x + y * 8 - 9) + i + 8 * j] = 1
+        return move_board
+
 
 class WhiteKing(White):
     def __init__(self):
@@ -36,6 +48,19 @@ class WhiteKing(White):
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.image.load("sprites/white_king.png")
         self.rect = self.image.get_rect()
+
+    def possible_moves(self, board):
+        x = int((self.rect.x - 25) / 100)
+        y = int((self.rect.y - 25) / 100)
+        move_board = board[:]
+
+        for i in range(3):
+            for j in range(3):
+                if 0 < (x + y * 8 - 9) + i + 8 * j < 64 and 8 > (x-1) + i > -1:
+                    if move_board[(x + y * 8 - 9) + i + 8 * j] == 0 or move_board[(x + y * 8 - 9) + i + 8 * j] < -1:
+                        move_board[(x + y * 8 - 9) + i + 8 * j] = 1
+        return move_board
+
 
 
 class BlackQueen(Black):
@@ -45,6 +70,83 @@ class BlackQueen(Black):
         self.image = pygame.image.load("sprites/black_queen.png")
         self.rect = self.image.get_rect()
 
+    def possible_moves(self, board):
+        x = int((self.rect.x - 25) / 100)
+        y = int((self.rect.y - 25) / 100)
+        move_board = board[:]
+        for i in range(y):
+            if move_board[((x + y * 8) - 8 * (i + 1))] == 0:
+                move_board[((x + y * 8) - 8 * (i + 1))] = 1
+            elif move_board[((x + y * 8) - 8 * (i + 1))] > 1:
+                move_board[((x + y * 8) - 8 * (i + 1))] = 1
+                break
+            elif move_board[((x + y * 8) - (i + 1))] < -1:
+                break
+
+        for i in range(7 - x):
+            if move_board[((x + y * 8) + (i + 1))] == 0:
+                move_board[((x + y * 8) + (i + 1))] = 1
+            elif move_board[((x + y * 8) + (i + 1))] > 1:
+                move_board[((x + y * 8) + (i + 1))] = 1
+                break
+            elif move_board[((x + y * 8) - (i + 1))] < -1:
+                break
+
+        for i in range(7 - y):
+            if move_board[((x + y * 8) + 8 * (i + 1))] == 0:
+                move_board[((x + y * 8) + 8 * (i + 1))] = 1
+            elif move_board[((x + y * 8) + 8 * (i + 1))] > 1:
+                move_board[((x + y * 8) + 8 * (i + 1))] = 1
+                break
+            elif move_board[((x + y * 8) - (i + 1))] < -1:
+                break
+
+        for i in range(x):
+            if move_board[((x + y * 8) - (i + 1))] == 0:
+                move_board[((x + y * 8) - (i + 1))] = 1
+            elif move_board[((x + y * 8) -  (i + 1))] > 1:
+                move_board[((x + y * 8) - (i + 1))] = 1
+                break
+            elif move_board[((x + y * 8) - (i + 1))] < -1:
+                break
+        for i in range(8):
+            if (x + y * 8) + (i+1) * 9 > 0 and (x + y * 8) + (i+1) * 9 < 64 and x + (i+1) < 8:
+                if move_board[(x + y * 8) + (i+1) * 9] == 0:
+                    move_board[(x + y * 8) + (i+1) * 9] = 1
+                if move_board[(x + y * 8) + (i+1) * 9] > 1:
+                    move_board[(x + y * 8) + (i+1) * 9] = 1
+                    break
+                if move_board[(x + y * 8) + (i+1) * 9] < -1:
+                    break
+        for i in range(8):
+            if (x + y * 8) - (i+1) * 9 > 0 and (x + y * 8) - (i+1) * 9 < 64 and x - (i+1) > -1:
+                if move_board[(x + y * 8) - (i+1) * 9] == 0:
+                    move_board[(x + y * 8) - (i+1) * 9] = 1
+                if move_board[(x + y * 8) - (i+1) * 9] > 1:
+                    move_board[(x + y * 8) - (i+1) * 9] = 1
+                    break
+                if move_board[(x + y * 8) - (i+1) * 9] < -1:
+                    break
+        for i in range(8):
+            if (x + y * 8) + (i+1) * 7 > 0 and (x + y * 8) + (i+1) * 7 < 64 and x - (i+1) > -1:
+                if move_board[(x + y * 8) + (i+1) * 7] == 0:
+                    move_board[(x + y * 8) + (i+1) * 7] = 1
+                if move_board[(x + y * 8) + (i+1) * 7] > 1:
+                    move_board[(x + y * 8) + (i+1) * 7] = 1
+                    break
+                if move_board[(x + y * 8) + (i+1) * 7] < -1:
+                    break
+        for i in range(8):
+            if (x + y * 8) - (i+1) * 7 > 0 and (x + y * 8) - (i+1) * 7 < 64 and x + (i+1) < 8:
+                if move_board[(x + y * 8) - (i+1) * 7] == 0:
+                    move_board[(x + y * 8) - (i+1) * 7] = 1
+                if move_board[(x + y * 8) - (i+1) * 7] > 1:
+                    move_board[(x + y * 8) - (i+1) * 7] = 1
+                    break
+                if move_board[(x + y * 8) - (i+1) * 7] < -1:
+                    break
+        return move_board
+
 
 class WhiteQueen(White):
     def __init__(self):
@@ -52,6 +154,84 @@ class WhiteQueen(White):
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.image.load("sprites/white_queen.png")
         self.rect = self.image.get_rect()
+
+    def possible_moves(self, board):
+        x = int((self.rect.x - 25) / 100)
+        y = int((self.rect.y - 25) / 100)
+        move_board = board[:]
+        for i in range(y):
+            if move_board[((x + y * 8) - 8 * (i+1))] == 0:
+                move_board[((x + y * 8) - 8 * (i+1))] = 1
+            elif move_board[((x + y * 8) - 8 * (i+1))] < -1:
+                move_board[((x + y * 8) - 8 * (i+1))] = 1
+                break
+            elif move_board[((x + y * 8) - 8 * (i+1))] > 1:
+                break
+
+        for i in range(7 - x):
+            if move_board[((x + y * 8) + (i+1))] == 0:
+                move_board[((x + y * 8) + (i+1))] = 1
+            elif move_board[((x + y * 8) + (i+1))] < -1:
+                move_board[((x + y * 8) + (i+1))] = 1
+                break
+            elif move_board[((x + y * 8) + (i+1))] > 1:
+                break
+
+        for i in range(7 - y):
+            if move_board[((x + y * 8) + 8 * (i+1))] == 0:
+                move_board[((x + y * 8) + 8 * (i+1))] = 1
+            elif move_board[((x + y * 8) + 8 * (i+1))] < -1:
+                move_board[((x + y * 8) + 8 * (i+1))] = 1
+                break
+            elif move_board[((x + y * 8) + 8 * (i+1))] > 1:
+                break
+
+        for i in range(x):
+            if move_board[((x + y * 8) - (i+1))] == 0:
+                move_board[((x + y * 8) - (i+1))] = 1
+            elif move_board[((x + y * 8) - (i+1))] < -1:
+                move_board[((x + y * 8) - (i+1))] = 1
+                break
+            elif move_board[((x + y * 8) - (i+1))] > 1:
+                break
+
+        for i in range(8):
+            if (x + y * 8) + (i+1) * 9 > 0 and (x + y * 8) + (i+1) * 9 < 64 and x + (i+1) < 8:
+                if move_board[(x + y * 8) + (i+1) * 9] == 0:
+                    move_board[(x + y * 8) + (i+1) * 9] = 1
+                if move_board[(x + y * 8) + (i+1) * 9] < -1:
+                    move_board[(x + y * 8) + (i+1) * 9] = 1
+                    break
+                if move_board[(x + y * 8) + (i+1) * 9] > 1:
+                    break
+        for i in range(8):
+            if (x + y * 8) - (i+1) * 9 > 0 and (x + y * 8) - (i+1) * 9 < 64 and x - (i+1) > -1:
+                if move_board[(x + y * 8) - (i+1) * 9] == 0:
+                    move_board[(x + y * 8) - (i+1) * 9] = 1
+                if move_board[(x + y * 8) - (i+1) * 9] < -1:
+                    move_board[(x + y * 8) - (i+1) * 9] = 1
+                    break
+                if move_board[(x + y * 8) - (i+1) * 9] > 1:
+                    break
+        for i in range(8):
+            if (x + y * 8) + (i+1) * 7 > 0 and (x + y * 8) + (i+1) * 7 < 64 and x - (i+1) > -1:
+                if move_board[(x + y * 8) + (i+1) * 7] == 0:
+                    move_board[(x + y * 8) + (i+1) * 7] = 1
+                if move_board[(x + y * 8) + (i+1) * 7] < -1:
+                    move_board[(x + y * 8) + (i+1) * 7] = 1
+                    break
+                if move_board[(x + y * 8) + (i+1) * 7] > 1:
+                    break
+        for i in range(8):
+            if (x + y * 8) - (i+1) * 7 > 0 and (x + y * 8) - (i+1) * 7 < 64 and x + (i+1) < 8:
+                if move_board[(x + y * 8) - (i+1) * 7] == 0:
+                    move_board[(x + y * 8) - (i+1) * 7] = 1
+                if move_board[(x + y * 8) - (i+1) * 7] < -1:
+                    move_board[(x + y * 8) - (i+1) * 7] = 1
+                    break
+                if move_board[(x + y * 8) - (i+1) * 7] > 1:
+                    break
+        return move_board
 
 
 class BlackBishop(Black):
@@ -61,6 +241,49 @@ class BlackBishop(Black):
         self.image = pygame.image.load("sprites/black_bishop.png")
         self.rect = self.image.get_rect()
 
+    def possible_moves(self, board):
+        x = int((self.rect.x - 25) / 100)
+        y = int((self.rect.y - 25) / 100)
+        move_board = board[:]
+
+        for i in range(8):
+            if (x + y * 8) + (i+1) * 9 > 0 and (x + y * 8) + (i+1) * 9 < 64 and x + (i+1) < 8:
+                if move_board[(x + y * 8) + (i+1) * 9] == 0:
+                    move_board[(x + y * 8) + (i+1) * 9] = 1
+                if move_board[(x + y * 8) + (i+1) * 9] > 1:
+                    move_board[(x + y * 8) + (i+1) * 9] = 1
+                    break
+                if move_board[(x + y * 8) + (i+1) * 9] < -1:
+                    break
+        for i in range(8):
+            if (x + y * 8) - (i+1) * 9 > 0 and (x + y * 8) - (i+1) * 9 < 64 and x - (i+1) > -1:
+                if move_board[(x + y * 8) - (i+1) * 9] == 0:
+                    move_board[(x + y * 8) - (i+1) * 9] = 1
+                if move_board[(x + y * 8) - (i+1) * 9] > 1:
+                    move_board[(x + y * 8) - (i+1) * 9] = 1
+                    break
+                if move_board[(x + y * 8) - (i+1) * 9] < -1:
+                    break
+        for i in range(8):
+            if (x + y * 8) + (i+1) * 7 > 0 and (x + y * 8) + (i+1) * 7 < 64 and x - (i+1) > -1:
+                if move_board[(x + y * 8) + (i+1) * 7] == 0:
+                    move_board[(x + y * 8) + (i+1) * 7] = 1
+                if move_board[(x + y * 8) + (i+1) * 7] > 1:
+                    move_board[(x + y * 8) + (i+1) * 7] = 1
+                    break
+                if move_board[(x + y * 8) + (i+1) * 7] < -1:
+                    break
+        for i in range(8):
+            if (x + y * 8) - (i+1) * 7 > 0 and (x + y * 8) - (i+1) * 7 < 64 and x + (i+1) < 8:
+                if move_board[(x + y * 8) - (i+1) * 7] == 0:
+                    move_board[(x + y * 8) - (i+1) * 7] = 1
+                if move_board[(x + y * 8) - (i+1) * 7] > 1:
+                    move_board[(x + y * 8) - (i+1) * 7] = 1
+                    break
+                if move_board[(x + y * 8) - (i+1) * 7] < -1:
+                    break
+        return move_board
+
 
 class WhiteBishop(White):
     def __init__(self):
@@ -68,6 +291,49 @@ class WhiteBishop(White):
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.image.load("sprites/white_bishop.png")
         self.rect = self.image.get_rect()
+
+    def possible_moves(self, board):
+        x = int((self.rect.x - 25) / 100)
+        y = int((self.rect.y - 25) / 100)
+        move_board = board[:]
+
+        for i in range(8):
+            if (x + y * 8) + (i+1) * 9 > 0 and (x + y * 8) + (i+1) * 9 < 64 and x + (i+1) < 8:
+                if move_board[(x + y * 8) + (i+1) * 9] == 0:
+                    move_board[(x + y * 8) + (i+1) * 9] = 1
+                if move_board[(x + y * 8) + (i+1) * 9] < -1:
+                    move_board[(x + y * 8) + (i+1) * 9] = 1
+                    break
+                if move_board[(x + y * 8) + (i+1) * 9] > 1:
+                    break
+        for i in range(8):
+            if (x + y * 8) - (i+1) * 9 > 0 and (x + y * 8) - (i+1) * 9 < 64 and x - (i+1) > -1:
+                if move_board[(x + y * 8) - (i+1) * 9] == 0:
+                    move_board[(x + y * 8) - (i+1) * 9] = 1
+                if move_board[(x + y * 8) - (i+1) * 9] < -1:
+                    move_board[(x + y * 8) - (i+1) * 9] = 1
+                    break
+                if move_board[(x + y * 8) - (i+1) * 9] > 1:
+                    break
+        for i in range(8):
+            if (x + y * 8) + (i+1) * 7 > 0 and (x + y * 8) + (i+1) * 7 < 64 and x - (i+1) > -1:
+                if move_board[(x + y * 8) + (i+1) * 7] == 0:
+                    move_board[(x + y * 8) + (i+1) * 7] = 1
+                if move_board[(x + y * 8) + (i+1) * 7] < -1:
+                    move_board[(x + y * 8) + (i+1) * 7] = 1
+                    break
+                if move_board[(x + y * 8) + (i+1) * 7] > 1:
+                    break
+        for i in range(8):
+            if (x + y * 8) - (i+1) * 7 > 0 and (x + y * 8) - (i+1) * 7 < 64 and x + (i+1) < 8:
+                if move_board[(x + y * 8) - (i+1) * 7] == 0:
+                    move_board[(x + y * 8) - (i+1) * 7] = 1
+                if move_board[(x + y * 8) - (i+1) * 7] < -1:
+                    move_board[(x + y * 8) - (i+1) * 7] = 1
+                    break
+                if move_board[(x + y * 8) - (i+1) * 7] > 1:
+                    break
+        return move_board
 
 
 class BlackKnight(Black):
@@ -77,6 +343,48 @@ class BlackKnight(Black):
         self.image = pygame.image.load("sprites/black_knight.png")
         self.rect = self.image.get_rect()
 
+    def possible_moves(self, board):
+        x = int((self.rect.x - 25) / 100)
+        y = int((self.rect.y - 25) / 100)
+        move_board = board[:]
+
+        if x < 6:
+            if (x + 8 * y) + 10 < 63:
+                if move_board[(x + 8 * y) + 10] == 0 or move_board[(x + 8 * y) + 10] > 1:
+                    move_board[(x + 8 * y) + 10] = 1
+            if (x + 8 * y) - 6 > 0:
+                if move_board[(x + 8 * y) - 6] == 0 or move_board[(x + 8 * y) - 6] > 1:
+                    move_board[(x + 8 * y) - 6] = 1
+
+        if x < 7:
+            if (x + 8 * y) - 15 > 0:
+                if move_board[(x + 8 * y) - 15] == 0 or move_board[(x + 8 * y) - 15] > 1:
+                    move_board[(x + 8 * y) - 15] = 1
+            if (x + 8 * y) + 17 < 63:
+                if move_board[(x + 8 * y) + 17] == 0 or move_board[(x + 8 * y) + 17] > 1:
+                    move_board[(x + 8 * y) + 17] = 1
+
+
+        if x > 0:
+            if (x + 8 * y) - 17 > 0:
+                if move_board[(x + 8 * y) - 17] == 0 or move_board[(x + 8 * y) - 17] > 1:
+                    move_board[(x + 8 * y) - 17] = 1
+            if (x + 8 * y) + 15 < 63:
+                if move_board[(x + 8 * y) + 15] == 0 or move_board[(x + 8 * y) + 15] > 1:
+                    move_board[(x + 8 * y) + 15] = 1
+
+
+        if x > 1:
+            if (x + 8 * y) + 6 < 63:
+                if move_board[(x + 8 * y) + 6] == 0 or move_board[(x + 8 * y) + 6] > 1:
+                    move_board[(x + 8 * y) + 6] = 1
+            if (x + 8 * y) - 10 > 0:
+                if move_board[(x + 8 * y) - 10] == 0 or move_board[(x + 8 * y) - 10] > 1:
+                    move_board[(x + 8 * y) - 10] = 1
+
+
+        return move_board
+
 
 class WhiteKnight(White):
     def __init__(self):
@@ -84,6 +392,48 @@ class WhiteKnight(White):
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.image.load("sprites/white_knight.png")
         self.rect = self.image.get_rect()
+
+    def possible_moves(self, board):
+        x = int((self.rect.x - 25) / 100)
+        y = int((self.rect.y - 25) / 100)
+        move_board = board[:]
+
+        if x < 6:
+            if (x + 8 * y) + 10 < 63:
+                if move_board[(x + 8 * y) + 10] == 0 or move_board[(x + 8 * y) + 10] < -1:
+                    move_board[(x + 8 * y) + 10] = 1
+            if (x + 8 * y) - 6 > 0:
+                if move_board[(x + 8 * y) - 6] == 0 or move_board[(x + 8 * y) - 6] < -1:
+                    move_board[(x + 8 * y) - 6] = 1
+
+        if x < 7:
+            if (x + 8 * y) - 15 > 0:
+                if move_board[(x + 8 * y) - 15] == 0 or move_board[(x + 8 * y) - 15] < -1:
+                    move_board[(x + 8 * y) - 15] = 1
+            if (x + 8 * y) + 17 < 63:
+                if move_board[(x + 8 * y) + 17] == 0 or move_board[(x + 8 * y) + 17] < -1:
+                    move_board[(x + 8 * y) + 17] = 1
+
+
+        if x > 0:
+            if (x + 8 * y) - 17 > 0:
+                if move_board[(x + 8 * y) - 17] == 0 or move_board[(x + 8 * y) - 17] < -1:
+                    move_board[(x + 8 * y) - 17] = 1
+            if (x + 8 * y) + 15 < 63:
+                if move_board[(x + 8 * y) + 15] == 0 or move_board[(x + 8 * y) + 15] < -1:
+                    move_board[(x + 8 * y) + 15] = 1
+
+
+        if x > 1:
+            if (x + 8 * y) + 6 < 63:
+                if move_board[(x + 8 * y) + 6] == 0 or move_board[(x + 8 * y) + 6] < -1:
+                    move_board[(x + 8 * y) + 6] = 1
+            if (x + 8 * y) - 10 > 0:
+                if move_board[(x + 8 * y) - 10] == 0 or move_board[(x + 8 * y) - 10] < -1:
+                    move_board[(x + 8 * y) - 10] = 1
+
+
+        return move_board
 
 
 class BlackRook(Black):
@@ -93,6 +443,48 @@ class BlackRook(Black):
         self.image = pygame.image.load("sprites/black_rook.png")
         self.rect = self.image.get_rect()
 
+    def possible_moves(self, board):
+        x = int((self.rect.x - 25) / 100)
+        y = int((self.rect.y - 25) / 100)
+        move_board = board[:]
+        for i in range(y):
+            if move_board[((x + y * 8) - 8 * (i + 1))] == 0:
+                move_board[((x + y * 8) - 8 * (i + 1))] = 1
+            elif move_board[((x + y * 8) - 8 * (i + 1))] > 1:
+                move_board[((x + y * 8) - 8 * (i + 1))] = 1
+                break
+            elif move_board[((x + y * 8) - (i + 1))] < -1:
+                break
+
+        for i in range(7 - x):
+            if move_board[((x + y * 8) + (i + 1))] == 0:
+                move_board[((x + y * 8) + (i + 1))] = 1
+            elif move_board[((x + y * 8) + (i + 1))] > 1:
+                move_board[((x + y * 8) + (i + 1))] = 1
+                break
+            elif move_board[((x + y * 8) - (i + 1))] < -1:
+                break
+
+        for i in range(7 - y):
+            if move_board[((x + y * 8) + 8 * (i + 1))] == 0:
+                move_board[((x + y * 8) + 8 * (i + 1))] = 1
+            elif move_board[((x + y * 8) + 8 * (i + 1))] > 1:
+                move_board[((x + y * 8) + 8 * (i + 1))] = 1
+                break
+            elif move_board[((x + y * 8) - (i + 1))] < -1:
+                break
+
+        for i in range(x):
+            if move_board[((x + y * 8) - (i + 1))] == 0:
+                move_board[((x + y * 8) - (i + 1))] = 1
+            elif move_board[((x + y * 8) -  (i + 1))] > 1:
+                move_board[((x + y * 8) - (i + 1))] = 1
+                break
+            elif move_board[((x + y * 8) - (i + 1))] < -1:
+                break
+
+        return move_board
+
 
 class WhiteRook(White):
     def __init__(self):
@@ -101,45 +493,46 @@ class WhiteRook(White):
         self.image = pygame.image.load("sprites/white_rook.png")
         self.rect = self.image.get_rect()
 
-    def possible_moves(self, move_board):
+    def possible_moves(self, board):
         x = int((self.rect.x - 25) / 100)
         y = int((self.rect.y - 25) / 100)
-        i = 1
-        if (x + i + y * 8) < 64:
-            while move_board[x + i + y * 8] == -1:
-                if (x + i + y * 8) < 64:
-                    move_board[x + i + y * 8] = -2
-                    if ((x + i + y * 8) + 1) % 8 == 0:
-                        break
-                    i += 1
-                else:
-                    break
-        i = 1
-        if (x - i + y * 8) > 0:
-            while move_board[x - i + y * 8] == -1:
-                if (x - i + y * 8) > -1:
-                    move_board[x - i + y * 8] = -2
-                    if (x - i + y * 8) % 8 == 0:
-                        break
-                    i += 1
-                else:
-                    break
-        i = 1
-        if (x + (y + i) * 8) < 64:
-            while move_board[x + (y + i) * 8] == -1:
-                if (x + i + (y - i) * 8) < 64:
-                    move_board[x + (y + i) * 8] = -2
-                    i += 1
-                else:
-                    break
-        i = 1
-        if (x + (y - i) * 8) > 0:
-            while move_board[x + (y - i) * 8] == -1:
-                if (x + (y - i) * 8) > -1:
-                    move_board[x + (y - i) * 8] = -2
-                    i += 1
-                else:
-                    break
+        move_board = board[:]
+        for i in range(y):
+            if move_board[((x + y * 8) - 8 * (i+1))] == 0:
+                move_board[((x + y * 8) - 8 * (i+1))] = 1
+            elif move_board[((x + y * 8) - 8 * (i+1))] < -1:
+                move_board[((x + y * 8) - 8 * (i+1))] = 1
+                break
+            elif move_board[((x + y * 8) - 8 * (i+1))] > 1:
+                break
+
+        for i in range(7 - x):
+            if move_board[((x + y * 8) + (i+1))] == 0:
+                move_board[((x + y * 8) + (i+1))] = 1
+            elif move_board[((x + y * 8) + (i+1))] < -1:
+                move_board[((x + y * 8) + (i+1))] = 1
+                break
+            elif move_board[((x + y * 8) + (i+1))] > 1:
+                break
+
+        for i in range(7 - y):
+            if move_board[((x + y * 8) + 8 * (i+1))] == 0:
+                move_board[((x + y * 8) + 8 * (i+1))] = 1
+            elif move_board[((x + y * 8) + 8 * (i+1))] < -1:
+                move_board[((x + y * 8) + 8 * (i+1))] = 1
+                break
+            elif move_board[((x + y * 8) + 8 * (i+1))] > 1:
+                break
+
+        for i in range(x):
+            if move_board[((x + y * 8) - (i+1))] == 0:
+                move_board[((x + y * 8) - (i+1))] = 1
+            elif move_board[((x + y * 8) - (i+1))] < -1:
+                move_board[((x + y * 8) - (i+1))] = 1
+                break
+            elif move_board[((x + y * 8) - (i+1))] > 1:
+                break
+
         return move_board
 
 
