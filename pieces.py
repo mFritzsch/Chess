@@ -62,7 +62,6 @@ class WhiteKing(White):
         return move_board
 
 
-
 class BlackQueen(Black):
     def __init__(self):
         Black.__init__(Black)
@@ -80,7 +79,7 @@ class BlackQueen(Black):
             elif move_board[((x + y * 8) - 8 * (i + 1))] > 1:
                 move_board[((x + y * 8) - 8 * (i + 1))] = 1
                 break
-            elif move_board[((x + y * 8) - (i + 1))] < -1:
+            elif move_board[((x + y * 8) - 8 * (i + 1))] < -1:
                 break
 
         for i in range(7 - x):
@@ -89,7 +88,7 @@ class BlackQueen(Black):
             elif move_board[((x + y * 8) + (i + 1))] > 1:
                 move_board[((x + y * 8) + (i + 1))] = 1
                 break
-            elif move_board[((x + y * 8) - (i + 1))] < -1:
+            elif move_board[((x + y * 8) + (i + 1))] < -1:
                 break
 
         for i in range(7 - y):
@@ -97,6 +96,15 @@ class BlackQueen(Black):
                 move_board[((x + y * 8) + 8 * (i + 1))] = 1
             elif move_board[((x + y * 8) + 8 * (i + 1))] > 1:
                 move_board[((x + y * 8) + 8 * (i + 1))] = 1
+                break
+            elif move_board[((x + y * 8) + 8 * (i + 1))] < -1:
+                break
+
+        for i in range(x):
+            if move_board[((x + y * 8) - (i + 1))] == 0:
+                move_board[((x + y * 8) - (i + 1))] = 1
+            elif move_board[((x + y * 8) - (i + 1))] > 1:
+                move_board[((x + y * 8) - (i + 1))] = 1
                 break
             elif move_board[((x + y * 8) - (i + 1))] < -1:
                 break
@@ -110,40 +118,40 @@ class BlackQueen(Black):
             elif move_board[((x + y * 8) - (i + 1))] < -1:
                 break
         for i in range(8):
-            if (x + y * 8) + (i+1) * 9 > 0 and (x + y * 8) + (i+1) * 9 < 64 and x + (i+1) < 8:
-                if move_board[(x + y * 8) + (i+1) * 9] == 0:
-                    move_board[(x + y * 8) + (i+1) * 9] = 1
-                if move_board[(x + y * 8) + (i+1) * 9] > 1:
-                    move_board[(x + y * 8) + (i+1) * 9] = 1
+            if (x + y * 8) + (i + 1) * 9 >= 0 and (x + y * 8) + (i + 1) * 9 < 64 and x + (i + 1) < 8:
+                if move_board[(x + y * 8) + (i + 1) * 9] == 0:
+                    move_board[(x + y * 8) + (i + 1) * 9] = 1
+                if move_board[(x + y * 8) + (i + 1) * 9] > 1:
+                    move_board[(x + y * 8) + (i + 1) * 9] = 1
                     break
-                if move_board[(x + y * 8) + (i+1) * 9] < -1:
-                    break
-        for i in range(8):
-            if (x + y * 8) - (i+1) * 9 > 0 and (x + y * 8) - (i+1) * 9 < 64 and x - (i+1) > -1:
-                if move_board[(x + y * 8) - (i+1) * 9] == 0:
-                    move_board[(x + y * 8) - (i+1) * 9] = 1
-                if move_board[(x + y * 8) - (i+1) * 9] > 1:
-                    move_board[(x + y * 8) - (i+1) * 9] = 1
-                    break
-                if move_board[(x + y * 8) - (i+1) * 9] < -1:
+                if move_board[(x + y * 8) + (i + 1) * 9] < -1:
                     break
         for i in range(8):
-            if (x + y * 8) + (i+1) * 7 > 0 and (x + y * 8) + (i+1) * 7 < 64 and x - (i+1) > -1:
-                if move_board[(x + y * 8) + (i+1) * 7] == 0:
-                    move_board[(x + y * 8) + (i+1) * 7] = 1
-                if move_board[(x + y * 8) + (i+1) * 7] > 1:
-                    move_board[(x + y * 8) + (i+1) * 7] = 1
+            if (x + y * 8) - (i + 1) * 9 >= 0 and (x + y * 8) - (i + 1) * 9 < 64 and x - (i + 1) > -1:
+                if move_board[(x + y * 8) - (i + 1) * 9] == 0:
+                    move_board[(x + y * 8) - (i + 1) * 9] = 1
+                if move_board[(x + y * 8) - (i + 1) * 9] > 1:
+                    move_board[(x + y * 8) - (i + 1) * 9] = 1
                     break
-                if move_board[(x + y * 8) + (i+1) * 7] < -1:
+                if move_board[(x + y * 8) - (i + 1) * 9] < -1:
                     break
         for i in range(8):
-            if (x + y * 8) - (i+1) * 7 > 0 and (x + y * 8) - (i+1) * 7 < 64 and x + (i+1) < 8:
-                if move_board[(x + y * 8) - (i+1) * 7] == 0:
-                    move_board[(x + y * 8) - (i+1) * 7] = 1
-                if move_board[(x + y * 8) - (i+1) * 7] > 1:
-                    move_board[(x + y * 8) - (i+1) * 7] = 1
+            if (x + y * 8) + (i + 1) * 7 >= 0 and (x + y * 8) + (i + 1) * 7 < 64 and x - (i + 1) > -1:
+                if move_board[(x + y * 8) + (i + 1) * 7] == 0:
+                    move_board[(x + y * 8) + (i + 1) * 7] = 1
+                if move_board[(x + y * 8) + (i + 1) * 7] > 1:
+                    move_board[(x + y * 8) + (i + 1) * 7] = 1
                     break
-                if move_board[(x + y * 8) - (i+1) * 7] < -1:
+                if move_board[(x + y * 8) + (i + 1) * 7] < -1:
+                    break
+        for i in range(8):
+            if (x + y * 8) - (i + 1) * 7 >= 0 and (x + y * 8) - (i + 1) * 7 < 64 and x + (i + 1) < 8:
+                if move_board[(x + y * 8) - (i + 1) * 7] == 0:
+                    move_board[(x + y * 8) - (i + 1) * 7] = 1
+                if move_board[(x + y * 8) - (i + 1) * 7] > 1:
+                    move_board[(x + y * 8) - (i + 1) * 7] = 1
+                    break
+                if move_board[(x + y * 8) - (i + 1) * 7] < -1:
                     break
         return move_board
 
@@ -196,7 +204,7 @@ class WhiteQueen(White):
                 break
 
         for i in range(8):
-            if (x + y * 8) + (i+1) * 9 > 0 and (x + y * 8) + (i+1) * 9 < 64 and x + (i+1) < 8:
+            if (x + y * 8) + (i+1) * 9 >= 0 and (x + y * 8) + (i+1) * 9 < 64 and x + (i+1) < 8:
                 if move_board[(x + y * 8) + (i+1) * 9] == 0:
                     move_board[(x + y * 8) + (i+1) * 9] = 1
                 if move_board[(x + y * 8) + (i+1) * 9] < -1:
@@ -205,7 +213,7 @@ class WhiteQueen(White):
                 if move_board[(x + y * 8) + (i+1) * 9] > 1:
                     break
         for i in range(8):
-            if (x + y * 8) - (i+1) * 9 > 0 and (x + y * 8) - (i+1) * 9 < 64 and x - (i+1) > -1:
+            if (x + y * 8) - (i+1) * 9 >= 0 and (x + y * 8) - (i+1) * 9 < 64 and x - (i+1) > -1:
                 if move_board[(x + y * 8) - (i+1) * 9] == 0:
                     move_board[(x + y * 8) - (i+1) * 9] = 1
                 if move_board[(x + y * 8) - (i+1) * 9] < -1:
@@ -214,7 +222,7 @@ class WhiteQueen(White):
                 if move_board[(x + y * 8) - (i+1) * 9] > 1:
                     break
         for i in range(8):
-            if (x + y * 8) + (i+1) * 7 > 0 and (x + y * 8) + (i+1) * 7 < 64 and x - (i+1) > -1:
+            if (x + y * 8) + (i+1) * 7 >= 0 and (x + y * 8) + (i+1) * 7 < 64 and x - (i+1) > -1:
                 if move_board[(x + y * 8) + (i+1) * 7] == 0:
                     move_board[(x + y * 8) + (i+1) * 7] = 1
                 if move_board[(x + y * 8) + (i+1) * 7] < -1:
@@ -223,7 +231,7 @@ class WhiteQueen(White):
                 if move_board[(x + y * 8) + (i+1) * 7] > 1:
                     break
         for i in range(8):
-            if (x + y * 8) - (i+1) * 7 > 0 and (x + y * 8) - (i+1) * 7 < 64 and x + (i+1) < 8:
+            if (x + y * 8) - (i+1) * 7 >= 0 and (x + y * 8) - (i+1) * 7 < 64 and x + (i+1) < 8:
                 if move_board[(x + y * 8) - (i+1) * 7] == 0:
                     move_board[(x + y * 8) - (i+1) * 7] = 1
                 if move_board[(x + y * 8) - (i+1) * 7] < -1:
@@ -247,7 +255,7 @@ class BlackBishop(Black):
         move_board = board[:]
 
         for i in range(8):
-            if (x + y * 8) + (i+1) * 9 > 0 and (x + y * 8) + (i+1) * 9 < 64 and x + (i+1) < 8:
+            if (x + y * 8) + (i+1) * 9 >= 0 and (x + y * 8) + (i+1) * 9 < 64 and x + (i+1) < 8:
                 if move_board[(x + y * 8) + (i+1) * 9] == 0:
                     move_board[(x + y * 8) + (i+1) * 9] = 1
                 if move_board[(x + y * 8) + (i+1) * 9] > 1:
@@ -256,7 +264,7 @@ class BlackBishop(Black):
                 if move_board[(x + y * 8) + (i+1) * 9] < -1:
                     break
         for i in range(8):
-            if (x + y * 8) - (i+1) * 9 > 0 and (x + y * 8) - (i+1) * 9 < 64 and x - (i+1) > -1:
+            if (x + y * 8) - (i+1) * 9 >= 0 and (x + y * 8) - (i+1) * 9 < 64 and x - (i+1) > -1:
                 if move_board[(x + y * 8) - (i+1) * 9] == 0:
                     move_board[(x + y * 8) - (i+1) * 9] = 1
                 if move_board[(x + y * 8) - (i+1) * 9] > 1:
@@ -265,7 +273,7 @@ class BlackBishop(Black):
                 if move_board[(x + y * 8) - (i+1) * 9] < -1:
                     break
         for i in range(8):
-            if (x + y * 8) + (i+1) * 7 > 0 and (x + y * 8) + (i+1) * 7 < 64 and x - (i+1) > -1:
+            if (x + y * 8) + (i+1) * 7 >= 0 and (x + y * 8) + (i+1) * 7 < 64 and x - (i+1) > -1:
                 if move_board[(x + y * 8) + (i+1) * 7] == 0:
                     move_board[(x + y * 8) + (i+1) * 7] = 1
                 if move_board[(x + y * 8) + (i+1) * 7] > 1:
@@ -274,7 +282,7 @@ class BlackBishop(Black):
                 if move_board[(x + y * 8) + (i+1) * 7] < -1:
                     break
         for i in range(8):
-            if (x + y * 8) - (i+1) * 7 > 0 and (x + y * 8) - (i+1) * 7 < 64 and x + (i+1) < 8:
+            if (x + y * 8) - (i+1) * 7 >= 0 and (x + y * 8) - (i+1) * 7 < 64 and x + (i+1) < 8:
                 if move_board[(x + y * 8) - (i+1) * 7] == 0:
                     move_board[(x + y * 8) - (i+1) * 7] = 1
                 if move_board[(x + y * 8) - (i+1) * 7] > 1:
@@ -298,7 +306,7 @@ class WhiteBishop(White):
         move_board = board[:]
 
         for i in range(8):
-            if (x + y * 8) + (i+1) * 9 > 0 and (x + y * 8) + (i+1) * 9 < 64 and x + (i+1) < 8:
+            if (x + y * 8) + (i+1) * 9 >= 0 and (x + y * 8) + (i+1) * 9 < 64 and x + (i+1) < 8:
                 if move_board[(x + y * 8) + (i+1) * 9] == 0:
                     move_board[(x + y * 8) + (i+1) * 9] = 1
                 if move_board[(x + y * 8) + (i+1) * 9] < -1:
@@ -307,7 +315,7 @@ class WhiteBishop(White):
                 if move_board[(x + y * 8) + (i+1) * 9] > 1:
                     break
         for i in range(8):
-            if (x + y * 8) - (i+1) * 9 > 0 and (x + y * 8) - (i+1) * 9 < 64 and x - (i+1) > -1:
+            if (x + y * 8) - (i+1) * 9 >= 0 and (x + y * 8) - (i+1) * 9 < 64 and x - (i+1) > -1:
                 if move_board[(x + y * 8) - (i+1) * 9] == 0:
                     move_board[(x + y * 8) - (i+1) * 9] = 1
                 if move_board[(x + y * 8) - (i+1) * 9] < -1:
@@ -316,7 +324,7 @@ class WhiteBishop(White):
                 if move_board[(x + y * 8) - (i+1) * 9] > 1:
                     break
         for i in range(8):
-            if (x + y * 8) + (i+1) * 7 > 0 and (x + y * 8) + (i+1) * 7 < 64 and x - (i+1) > -1:
+            if (x + y * 8) + (i+1) * 7 >= 0 and (x + y * 8) + (i+1) * 7 < 64 and x - (i+1) > -1:
                 if move_board[(x + y * 8) + (i+1) * 7] == 0:
                     move_board[(x + y * 8) + (i+1) * 7] = 1
                 if move_board[(x + y * 8) + (i+1) * 7] < -1:
@@ -325,7 +333,7 @@ class WhiteBishop(White):
                 if move_board[(x + y * 8) + (i+1) * 7] > 1:
                     break
         for i in range(8):
-            if (x + y * 8) - (i+1) * 7 > 0 and (x + y * 8) - (i+1) * 7 < 64 and x + (i+1) < 8:
+            if (x + y * 8) - (i+1) * 7 >= 0 and (x + y * 8) - (i+1) * 7 < 64 and x + (i+1) < 8:
                 if move_board[(x + y * 8) - (i+1) * 7] == 0:
                     move_board[(x + y * 8) - (i+1) * 7] = 1
                 if move_board[(x + y * 8) - (i+1) * 7] < -1:
@@ -453,7 +461,7 @@ class BlackRook(Black):
             elif move_board[((x + y * 8) - 8 * (i + 1))] > 1:
                 move_board[((x + y * 8) - 8 * (i + 1))] = 1
                 break
-            elif move_board[((x + y * 8) - (i + 1))] < -1:
+            elif move_board[((x + y * 8) - 8 * (i + 1))] < -1:
                 break
 
         for i in range(7 - x):
@@ -462,7 +470,7 @@ class BlackRook(Black):
             elif move_board[((x + y * 8) + (i + 1))] > 1:
                 move_board[((x + y * 8) + (i + 1))] = 1
                 break
-            elif move_board[((x + y * 8) - (i + 1))] < -1:
+            elif move_board[((x + y * 8) + (i + 1))] < -1:
                 break
 
         for i in range(7 - y):
@@ -471,13 +479,13 @@ class BlackRook(Black):
             elif move_board[((x + y * 8) + 8 * (i + 1))] > 1:
                 move_board[((x + y * 8) + 8 * (i + 1))] = 1
                 break
-            elif move_board[((x + y * 8) - (i + 1))] < -1:
+            elif move_board[((x + y * 8) + 8 * (i + 1))] < -1:
                 break
 
         for i in range(x):
             if move_board[((x + y * 8) - (i + 1))] == 0:
                 move_board[((x + y * 8) - (i + 1))] = 1
-            elif move_board[((x + y * 8) -  (i + 1))] > 1:
+            elif move_board[((x + y * 8) - (i + 1))] > 1:
                 move_board[((x + y * 8) - (i + 1))] = 1
                 break
             elif move_board[((x + y * 8) - (i + 1))] < -1:

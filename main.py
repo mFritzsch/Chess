@@ -152,7 +152,6 @@ def move_piece(board, move_board, existing_pieces, rounds):
     for i in range(len(existing_pieces)):
         if existing_pieces[i].selected:
 
-
             move_board = existing_pieces[i].possible_moves(board)
             for j in range(len(move_board)):
                 if move_board[j] != 0 and move_board[j] != 1:
@@ -165,15 +164,5 @@ while True:
     draw_board()
     pygame.display.update()
     board, move_board, existing_pieces, rounds = move_piece(board, move_board, existing_pieces, rounds)
-    if rounds % 1 == 0:
-        # print(move_board)
-        # print(board)
-        for i in range(len(board)):
-            #print(existing_pieces[board[i]].selected)
-            continue
-    for i in range(len(existing_pieces)):
-        if existing_pieces[i].selected:
-            # print(i)
-            continue
 
-pygame.quit()
+#pygame.quit()
