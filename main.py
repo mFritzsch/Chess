@@ -64,12 +64,12 @@ existing_pieces = [white_pawn1, white_pawn2, white_pawn3, white_pawn4, white_paw
 all_sprites.add(existing_pieces)
 
 
-def check_square(x, y):
-    if board[int(x / 100) + 8 * (int(y / 100))] < -1:
-        piece = existing_pieces[board[(int(x / 100)) + 8 * (int(y / 100))] + 2]
+def check_square(pos):
+    if board[pos] < -1:
+        piece = existing_pieces[board[pos] + 2]
         return piece
-    elif board[int(x / 100) + 8 * (int(y / 100))] > 1:
-        piece = existing_pieces[board[(int(x / 100)) + 8 * (int(y / 100))] - 2]
+    elif board[pos] > 1:
+        piece = existing_pieces[board[pos] - 2]
         return piece
 
 
@@ -111,16 +111,17 @@ def move_piece(board, move_board, existing_pieces, rounds):
     for event in pygame.event.get():
         if event.type == pygame.MOUSEBUTTONDOWN:
             x_pos, y_pos = pygame.mouse.get_pos()
-            if (int(x_pos / 100)) + 8 * (int(y_pos / 100)) < 64:
-                if move_board[(int(x_pos / 100)) + 8 * (int(y_pos / 100))] == 1:
+            position = (int(x_pos / 100 - 0.25)) + 8 * (int(y_pos / 100 - 0.25))
+            if position < 64:
+                if move_board[position] == 1:
                     for i in range(len(board)):
                         if board[i] > 1:
                             if existing_pieces[board[i]-2].selected:
                                 existing_pieces[board[i]-2].selected = False
                                 rounds += 1
-                                if board[(int(x_pos / 100)) + 8 * (int(y_pos / 100))] != 0:
-                                    all_sprites.remove(existing_pieces[board[(int(x_pos / 100)) + 8 * (int(y_pos / 100))] + 2])
-                                board[(int(x_pos / 100)) + 8 * (int(y_pos / 100))] = board[i]
+                                if board[position] != 0:
+                                    all_sprites.remove(existing_pieces[board[position] + 2])
+                                board[position] = board[i]
                                 board[i] = 0
                                 for j in range(len(move_board)):
                                     if move_board[j] == 1:
@@ -130,25 +131,25 @@ def move_piece(board, move_board, existing_pieces, rounds):
                             if existing_pieces[board[i]+2].selected:
                                 existing_pieces[board[i]+2].selected = False
                                 rounds += 1
-                                if board[(int(x_pos / 100)) + 8 * (int(y_pos / 100))] != 0:
-                                    all_sprites.remove(existing_pieces[board[(int(x_pos / 100)) + 8 * (int(y_pos / 100))] - 2])
-                                board[(int(x_pos / 100)) + 8 * (int(y_pos / 100))] = board[i]
+                                if board[position] != 0:
+                                    all_sprites.remove(existing_pieces[board[position] - 2])
+                                board[position] = board[i]
                                 board[i] = 0
                                 for j in range(len(move_board)):
                                     if move_board[j] == 1:
                                         move_board[j] = 0
                                 break
 
-                elif board[(int(x_pos / 100)) + 8 * (int(y_pos / 100))] != 0:
+                elif board[position] != 0:
                     for i in range(len(existing_pieces)):
                         if existing_pieces[i].selected:
                             existing_pieces[i].selected = False
                             for j in range(len(move_board)):
                                 if move_board[j] == 1:
                                     move_board[j] = 0
-                    if check_square(x_pos, y_pos).colour == "white" and rounds % 2 == 0 or \
-                            check_square(x_pos, y_pos).colour == "black" and rounds % 2 != 0:
-                        check_square(x_pos, y_pos).selected = True
+                    if check_square(position).colour == "white" and rounds % 2 == 0 or \
+                            check_square(position).colour == "black" and rounds % 2 != 0:
+                        check_square(position).selected = True
     for i in range(len(existing_pieces)):
         if existing_pieces[i].selected:
 
@@ -165,4 +166,4 @@ while True:
     pygame.display.update()
     board, move_board, existing_pieces, rounds = move_piece(board, move_board, existing_pieces, rounds)
 
-#pygame.quit()
+# pygame.quit()
