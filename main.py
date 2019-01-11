@@ -107,6 +107,42 @@ def hostile(a, b):
             return True
 
 
+def checkmate_prevent(board, move_board, existing_pieces):
+    for j in range(len(board)):
+        if board[j] < -1:
+            if existing_pieces[board[j]+2].selected:
+                for i in range(len(move_board)):
+                    if move_board[i] == 1:
+                        test_board = board[:]
+                        test_board[i] = board[j]
+                        test_board[j] = 0
+                        for a in range(len(test_board)):
+                            if board[a] > 1:
+                                test_move_board = existing_pieces[test_board[a]-2].possible_moves(test_board)
+                                for k in range(len(test_board)):
+                                    if test_board[k] == -7:
+                                        if test_move_board[k] == 1:
+                                            move_board[i] = 0
+        if board[j] > 1:
+            if existing_pieces[board[j]-2].selected:
+                for i in range(len(move_board)):
+                    if move_board[i] == 1:
+                        test_board = board[:]
+                        test_board[i] = board[j]
+                        test_board[j] = 0
+                        for a in range(len(test_board)):
+                            if board[a] < -1:
+                                test_move_board = existing_pieces[test_board[a]+2].possible_moves(test_board)
+                                for k in range(len(test_board)):
+                                    if test_board[k] == 14:
+                                        if test_move_board[k] == 1:
+                                            move_board[i] = 0
+    return move_board
+
+
+
+
+
 def move_piece(board, move_board, existing_pieces, rounds):
     for event in pygame.event.get():
         if event.type == pygame.MOUSEBUTTONDOWN:
@@ -123,9 +159,7 @@ def move_piece(board, move_board, existing_pieces, rounds):
                                     all_sprites.remove(existing_pieces[board[position] + 2])
                                 board[position] = board[i]
                                 board[i] = 0
-                                for j in range(len(move_board)):
-                                    if move_board[j] == 1:
-                                        move_board[j] = 0
+                                move_board = [0] * 64
                                 break
                         elif board[i] < -1:
                             if existing_pieces[board[i]+2].selected:
@@ -135,9 +169,7 @@ def move_piece(board, move_board, existing_pieces, rounds):
                                     all_sprites.remove(existing_pieces[board[position] - 2])
                                 board[position] = board[i]
                                 board[i] = 0
-                                for j in range(len(move_board)):
-                                    if move_board[j] == 1:
-                                        move_board[j] = 0
+                                move_board = [0] * 64
                                 break
 
                 elif board[position] != 0:
@@ -154,9 +186,8 @@ def move_piece(board, move_board, existing_pieces, rounds):
         if existing_pieces[i].selected:
 
             move_board = existing_pieces[i].possible_moves(board)
-            for j in range(len(move_board)):
-                if move_board[j] != 0 and move_board[j] != 1:
-                    move_board[j] = 0
+            move_board = checkmate_prevent(board, move_board, existing_pieces)
+
     return board, move_board, existing_pieces, rounds
 
 while True:
