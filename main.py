@@ -159,7 +159,7 @@ def move_piece(board, move_board, existing_pieces, rounds):
                                     all_sprites.remove(existing_pieces[board[position] + 2])
                                 board[position] = board[i]
                                 board[i] = 0
-                                if 2 <= board[position] <= 9 and 0 <= position <= 7:
+                                if 0 <= position <= 7 and isinstance(existing_pieces[board[position] - 2], pieces.WhitePawn):
                                     user_input = -1
                                     while user_input < 1 or user_input > 4:
                                         user_input = int(input("enter 1 for Rook, 2 for Queen, 3 for Bishop and "
@@ -184,7 +184,7 @@ def move_piece(board, move_board, existing_pieces, rounds):
                                     all_sprites.remove(existing_pieces[board[position] - 2])
                                 board[position] = board[i]
                                 board[i] = 0
-                                if board[position] < -10 and 54 <= position <= 63:
+                                if 54 <= position <= 63 and isinstance(existing_pieces[board[position] +2], pieces.BlackPawn):
                                     user_input = -1
                                     while user_input < 1 or user_input > 4:
                                         user_input = int(input("enter 1 for Rook, 2 for Queen, 3 for Bishop and "
