@@ -577,7 +577,6 @@ class WhitePawn(White):
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.image.load("sprites/white_pawn.png")
         self.rect = self.image.get_rect()
-        self.en_passant = False
 
     def possible_moves(self, board):
         x = int((self.rect.x - 25) / 100)
@@ -586,6 +585,8 @@ class WhitePawn(White):
         if (x + y * 8) + 8 < 64:
             if move_board[(x+y*8)-8] == 0:
                 move_board[(x + y * 8)-8] = 1
+                if y == 6 and move_board[(x+y*8)-16] == 0:
+                    move_board[(x + y * 8) - 16] = 1
             if move_board[(x+y*8)-9] < -1:
                 move_board[(x + y * 8) - 9] = 1
 
