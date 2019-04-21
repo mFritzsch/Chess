@@ -117,7 +117,7 @@ def checkmate_prevent(board, move_board, existing_pieces):
                         test_board[i] = board[j]
                         test_board[j] = 0
                         for a in range(len(test_board)):
-                            if board[a] > 1:
+                            if test_board[a] > 1:
                                 test_move_board = existing_pieces[test_board[a]-2].possible_moves(test_board)
                                 for k in range(len(test_board)):
                                     if test_board[k] == -7:
@@ -131,7 +131,7 @@ def checkmate_prevent(board, move_board, existing_pieces):
                         test_board[i] = board[j]
                         test_board[j] = 0
                         for a in range(len(test_board)):
-                            if board[a] < -1:
+                            if test_board[a] < -1:
                                 test_move_board = existing_pieces[test_board[a]+2].possible_moves(test_board)
                                 for k in range(len(test_board)):
                                     if test_board[k] == 14:
