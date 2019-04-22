@@ -145,7 +145,37 @@ def checkmate_prevent(board, move_board, existing_pieces):
     return move_board
 
 
-
+def promotion(position):
+    if 0 <= position <= 7 and isinstance(existing_pieces[board[position]], pieces.WhitePawn):
+        user_input = -1
+        while user_input < 1 or user_input > 4:
+            user_input = int(input("enter 1 for Rook, 2 for Queen, 3 for Bishop and "
+                                   "4 for Knight"))
+            all_sprites.remove(existing_pieces[board[position]])
+            if user_input == 1:
+                existing_pieces[board[position]] = pieces.WhiteRook()
+            elif user_input == 2:
+                existing_pieces[board[position]] = pieces.WhiteQueen()
+            elif user_input == 3:
+                existing_pieces[board[position]] = pieces.WhiteBishop()
+            elif user_input == 4:
+                existing_pieces[board[position]] = pieces.WhiteKnight()
+            all_sprites.add(existing_pieces[board[position]])
+    if 56 <= position <= 63 and isinstance(existing_pieces[board[position]], pieces.BlackPawn):
+        user_input = -1
+        while user_input < 1 or user_input > 4:
+            user_input = int(input("enter 1 for Rook, 2 for Queen, 3 for Bishop and "
+                                   "4 for Knight"))
+            all_sprites.remove(existing_pieces[board[position]])
+            if user_input == 1:
+                existing_pieces[board[position]] = pieces.BlackRook()
+            elif user_input == 2:
+                existing_pieces[board[position]] = pieces.BlackQueen()
+            elif user_input == 3:
+                existing_pieces[board[position]] = pieces.BlackBishop()
+            elif user_input == 4:
+                existing_pieces[board[position]] = pieces.BlackKnight()
+            all_sprites.add(existing_pieces[board[position]])
 
 
 def move_piece(board, move_board, existing_pieces, rounds):
@@ -164,22 +194,7 @@ def move_piece(board, move_board, existing_pieces, rounds):
                                     all_sprites.remove(existing_pieces[board[position]])
                                 board[position] = board[i]
                                 board[i] = -0.5
-                                if isinstance(existing_pieces[board[position]], pieces.WhitePawn):
-                                    if 0 <= position <= 7:
-                                        user_input = -1
-                                        while user_input < 1 or user_input > 4:
-                                            user_input = int(input("enter 1 for Rook, 2 for Queen, 3 for Bishop and "
-                                                               "4 for Knight"))
-                                            all_sprites.remove(existing_pieces[board[position]])
-                                            if user_input == 1:
-                                                existing_pieces[board[position]] = pieces.WhiteRook()
-                                            elif user_input == 2:
-                                                existing_pieces[board[position]] = pieces.WhiteQueen()
-                                            elif user_input == 3:
-                                                existing_pieces[board[position]] = pieces.WhiteBishop()
-                                            elif user_input == 4:
-                                                existing_pieces[board[position]] = pieces.WhiteKnight()
-                                            all_sprites.add(existing_pieces[board[position]])
+                                promotion(position)
                                 move_board = [0] * 64
                                 break
                         elif board[i] <= -1:
@@ -190,24 +205,8 @@ def move_piece(board, move_board, existing_pieces, rounds):
                                     all_sprites.remove(existing_pieces[board[position]])
                                 board[position] = board[i]
                                 board[i] = -0.5
-                                if 54 <= position <= 63 and isinstance(existing_pieces[board[position]], pieces.BlackPawn):
-                                    user_input = -1
-                                    while user_input < 1 or user_input > 4:
-                                        user_input = int(input("enter 1 for Rook, 2 for Queen, 3 for Bishop and "
-                                                           "4 for Knight"))
-                                        all_sprites.remove(existing_pieces[board[position]])
-                                        if user_input == 1:
-                                            existing_pieces[board[position]] = pieces.BlackRook()
-                                        elif user_input == 2:
-                                            existing_pieces[board[position]] = pieces.BlackQueen()
-                                        elif user_input == 3:
-                                            existing_pieces[board[position]] = pieces.BlackBishop()
-                                        elif user_input == 4:
-                                            existing_pieces[board[position]] = pieces.BlackKinght()
-                                        all_sprites.add(existing_pieces[board[position]])
-
-
-                                move_board = [0] * 64
+                                promotion(position)
+                                move_board = [-0.5] * 64
                                 break
 
                 elif board[position] != -0.5:

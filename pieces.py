@@ -12,19 +12,19 @@ class AnyPiece(pygame.sprite.Sprite):
 
 class White(AnyPiece):
     def __init__(self):
-        AnyPiece.__init__(AnyPiece)
+        AnyPiece.__init__(self)
         self.colour = "white"
 
 
 class Black(AnyPiece):
     def __init__(self):
-        AnyPiece.__init__(AnyPiece)
+        AnyPiece.__init__(self)
         self.colour = "black"
 
 
 class BlackKing(Black):
     def __init__(self):
-        Black.__init__(Black)
+        Black.__init__(self)
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.image.load("sprites/black_king.png")
         self.rect = self.image.get_rect()
@@ -44,7 +44,7 @@ class BlackKing(Black):
 
 class WhiteKing(White):
     def __init__(self):
-        White.__init__(White)
+        White.__init__(self)
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.image.load("sprites/white_king.png")
         self.rect = self.image.get_rect()
@@ -64,7 +64,7 @@ class WhiteKing(White):
 
 class BlackQueen(Black):
     def __init__(self):
-        Black.__init__(Black)
+        Black.__init__(self)
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.image.load("sprites/black_queen.png")
         self.rect = self.image.get_rect()
@@ -109,16 +109,8 @@ class BlackQueen(Black):
             elif move_board[((x + y * 8) - (i + 1))] <= -1:
                 break
 
-        for i in range(x):
-            if move_board[((x + y * 8) - (i + 1))] == -0.5:
-                move_board[((x + y * 8) - (i + 1))] = -0.25
-            elif move_board[((x + y * 8) -  (i + 1))] >= 0:
-                move_board[((x + y * 8) - (i + 1))] = -0.25
-                break
-            elif move_board[((x + y * 8) - (i + 1))] <= -1:
-                break
         for i in range(8):
-            if (x + y * 8) + (i + 1) * 9 >= 0 and (x + y * 8) + (i + 1) * 9 < 64 and x + (i + 1) < 8:
+            if 0 <= (x + y * 8) + (i + 1) * 9 < 64 and x + (i + 1) < 8:
                 if move_board[(x + y * 8) + (i + 1) * 9] == -0.5:
                     move_board[(x + y * 8) + (i + 1) * 9] = -0.25
                 if move_board[(x + y * 8) + (i + 1) * 9] >= 0:
@@ -126,8 +118,9 @@ class BlackQueen(Black):
                     break
                 if move_board[(x + y * 8) + (i + 1) * 9] <= -1:
                     break
+
         for i in range(8):
-            if (x + y * 8) - (i + 1) * 9 >= 0 and (x + y * 8) - (i + 1) * 9 < 64 and x - (i + 1) > -1:
+            if 0 <= (x + y * 8) - (i + 1) * 9 < 64 and x - (i + 1) > -1:
                 if move_board[(x + y * 8) - (i + 1) * 9] == -0.5:
                     move_board[(x + y * 8) - (i + 1) * 9] = -0.25
                 if move_board[(x + y * 8) - (i + 1) * 9] >= 0:
@@ -135,8 +128,9 @@ class BlackQueen(Black):
                     break
                 if move_board[(x + y * 8) - (i + 1) * 9] <= -1:
                     break
+
         for i in range(8):
-            if (x + y * 8) + (i + 1) * 7 >= 0 and (x + y * 8) + (i + 1) * 7 < 64 and x - (i + 1) > -1:
+            if 0 <= (x + y * 8) + (i + 1) * 7 < 64 and x - (i + 1) > -1:
                 if move_board[(x + y * 8) + (i + 1) * 7] == -0.5:
                     move_board[(x + y * 8) + (i + 1) * 7] = -0.25
                 if move_board[(x + y * 8) + (i + 1) * 7] >= 0:
@@ -144,8 +138,9 @@ class BlackQueen(Black):
                     break
                 if move_board[(x + y * 8) + (i + 1) * 7] <= -1:
                     break
+
         for i in range(8):
-            if (x + y * 8) - (i + 1) * 7 >= 0 and (x + y * 8) - (i + 1) * 7 < 64 and x + (i + 1) < 8:
+            if 0 <= (x + y * 8) - (i + 1) * 7 < 64 and x + (i + 1) < 8:
                 if move_board[(x + y * 8) - (i + 1) * 7] == -0.5:
                     move_board[(x + y * 8) - (i + 1) * 7] = -0.25
                 if move_board[(x + y * 8) - (i + 1) * 7] >= 0:
@@ -153,12 +148,13 @@ class BlackQueen(Black):
                     break
                 if move_board[(x + y * 8) - (i + 1) * 7] <= -1:
                     break
+
         return move_board
 
 
 class WhiteQueen(White):
     def __init__(self):
-        White.__init__(White)
+        White.__init__(self)
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.image.load("sprites/white_queen.png")
         self.rect = self.image.get_rect()
@@ -204,7 +200,7 @@ class WhiteQueen(White):
                 break
 
         for i in range(8):
-            if (x + y * 8) + (i+1) * 9 >= 0 and (x + y * 8) + (i+1) * 9 < 64 and x + (i+1) < 8:
+            if 0 <= (x + y * 8) + (i+1) * 9 < 64 and x + (i+1) < 8:
                 if move_board[(x + y * 8) + (i+1) * 9] == -0.5:
                     move_board[(x + y * 8) + (i+1) * 9] = -0.25
                 if move_board[(x + y * 8) + (i+1) * 9] <= -1:
@@ -212,8 +208,9 @@ class WhiteQueen(White):
                     break
                 if move_board[(x + y * 8) + (i+1) * 9] >= 0:
                     break
+
         for i in range(8):
-            if (x + y * 8) - (i+1) * 9 >= 0 and (x + y * 8) - (i+1) * 9 < 64 and x - (i+1) > -1:
+            if 0 <= (x + y * 8) - (i+1) * 9 < 64 and x - (i+1) > -1:
                 if move_board[(x + y * 8) - (i+1) * 9] == -0.5:
                     move_board[(x + y * 8) - (i+1) * 9] = -0.25
                 if move_board[(x + y * 8) - (i+1) * 9] <= -1:
@@ -221,8 +218,9 @@ class WhiteQueen(White):
                     break
                 if move_board[(x + y * 8) - (i+1) * 9] >= 0:
                     break
+
         for i in range(8):
-            if (x + y * 8) + (i+1) * 7 >= 0 and (x + y * 8) + (i+1) * 7 < 64 and x - (i+1) > -1:
+            if 0 <= (x + y * 8) + (i+1) * 7 < 64 and x - (i+1) > -1:
                 if move_board[(x + y * 8) + (i+1) * 7] == -0.5:
                     move_board[(x + y * 8) + (i+1) * 7] = -0.25
                 if move_board[(x + y * 8) + (i+1) * 7] <= -1:
@@ -231,7 +229,7 @@ class WhiteQueen(White):
                 if move_board[(x + y * 8) + (i+1) * 7] >= 0:
                     break
         for i in range(8):
-            if (x + y * 8) - (i+1) * 7 >= 0 and (x + y * 8) - (i+1) * 7 < 64 and x + (i+1) < 8:
+            if 0 <= (x + y * 8) - (i+1) * 7 >= 0 < 64 and x + (i+1) < 8:
                 if move_board[(x + y * 8) - (i+1) * 7] == -0.5:
                     move_board[(x + y * 8) - (i+1) * 7] = -0.25
                 if move_board[(x + y * 8) - (i+1) * 7] <= -1:
@@ -239,12 +237,13 @@ class WhiteQueen(White):
                     break
                 if move_board[(x + y * 8) - (i+1) * 7] >= 0:
                     break
+
         return move_board
 
 
 class BlackBishop(Black):
     def __init__(self):
-        Black.__init__(Black)
+        Black.__init__(self)
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.image.load("sprites/black_bishop.png")
         self.rect = self.image.get_rect()
@@ -255,7 +254,7 @@ class BlackBishop(Black):
         move_board = board[:]
 
         for i in range(8):
-            if (x + y * 8) + (i+1) * 9 >= 0 and (x + y * 8) + (i+1) * 9 < 64 and x + (i+1) < 8:
+            if 0 <= (x + y * 8) + (i+1) * 9 < 64 and x + (i+1) < 8:
                 if move_board[(x + y * 8) + (i+1) * 9] == -0.5:
                     move_board[(x + y * 8) + (i+1) * 9] = -0.25
                 if move_board[(x + y * 8) + (i+1) * 9] >= 0:
@@ -263,8 +262,9 @@ class BlackBishop(Black):
                     break
                 if move_board[(x + y * 8) + (i+1) * 9] <= -1:
                     break
+
         for i in range(8):
-            if (x + y * 8) - (i+1) * 9 >= 0 and (x + y * 8) - (i+1) * 9 < 64 and x - (i+1) > -1:
+            if 0 <= (x + y * 8) - (i+1) * 9 < 64 and x - (i+1) > -1:
                 if move_board[(x + y * 8) - (i+1) * 9] == -0.5:
                     move_board[(x + y * 8) - (i+1) * 9] = -0.25
                 if move_board[(x + y * 8) - (i+1) * 9] >= 0:
@@ -272,8 +272,9 @@ class BlackBishop(Black):
                     break
                 if move_board[(x + y * 8) - (i+1) * 9] <= -1:
                     break
+
         for i in range(8):
-            if (x + y * 8) + (i+1) * 7 >= 0 and (x + y * 8) + (i+1) * 7 < 64 and x - (i+1) > -1:
+            if 0 <= (x + y * 8) + (i+1) * 7 < 64 and x - (i+1) > -1:
                 if move_board[(x + y * 8) + (i+1) * 7] == -0.5:
                     move_board[(x + y * 8) + (i+1) * 7] = -0.25
                 if move_board[(x + y * 8) + (i+1) * 7] >= 0:
@@ -281,8 +282,9 @@ class BlackBishop(Black):
                     break
                 if move_board[(x + y * 8) + (i+1) * 7] <= -1:
                     break
+
         for i in range(8):
-            if (x + y * 8) - (i+1) * 7 >= 0 and (x + y * 8) - (i+1) * 7 < 64 and x + (i+1) < 8:
+            if 0 <= (x + y * 8) - (i+1) * 7 < 64 and x + (i+1) < 8:
                 if move_board[(x + y * 8) - (i+1) * 7] == -0.5:
                     move_board[(x + y * 8) - (i+1) * 7] = -0.25
                 if move_board[(x + y * 8) - (i+1) * 7] >= 0:
@@ -290,12 +292,13 @@ class BlackBishop(Black):
                     break
                 if move_board[(x + y * 8) - (i+1) * 7] <= -1:
                     break
+
         return move_board
 
 
 class WhiteBishop(White):
     def __init__(self):
-        White.__init__(White)
+        White.__init__(self)
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.image.load("sprites/white_bishop.png")
         self.rect = self.image.get_rect()
@@ -306,47 +309,50 @@ class WhiteBishop(White):
         move_board = board[:]
 
         for i in range(8):
-            if (x + y * 8) + (i+1) * 9 >= 0 and (x + y * 8) + (i+1) * 9 < 64 and x + (i+1) < 8:
-                if move_board[(x + y * 8) + (i+1) * 9] == -0.5:
-                    move_board[(x + y * 8) + (i+1) * 9] = -0.25
-                if move_board[(x + y * 8) + (i+1) * 9] <= -1:
-                    move_board[(x + y * 8) + (i+1) * 9] = -0.25
+            if 0 <= (x + y * 8) + (i + 1) * 9 < 64 and x + (i + 1) < 8:
+                if move_board[(x + y * 8) + (i + 1) * 9] == -0.5:
+                    move_board[(x + y * 8) + (i + 1) * 9] = -0.25
+                if move_board[(x + y * 8) + (i + 1) * 9] <= -1:
+                    move_board[(x + y * 8) + (i + 1) * 9] = -0.25
                     break
-                if move_board[(x + y * 8) + (i+1) * 9] >= 0:
+                if move_board[(x + y * 8) + (i + 1) * 9] >= 0:
+                    break
+
+        for i in range(8):
+            if 0 <= (x + y * 8) - (i + 1) * 9 < 64 and x - (i + 1) > -1:
+                if move_board[(x + y * 8) - (i + 1) * 9] == -0.5:
+                    move_board[(x + y * 8) - (i + 1) * 9] = -0.25
+                if move_board[(x + y * 8) - (i + 1) * 9] <= -1:
+                    move_board[(x + y * 8) - (i + 1) * 9] = -0.25
+                    break
+                if move_board[(x + y * 8) - (i + 1) * 9] >= 0:
+                    break
+
+        for i in range(8):
+            if 0 <= (x + y * 8) + (i + 1) * 7 < 64 and x - (i + 1) > -1:
+                if move_board[(x + y * 8) + (i + 1) * 7] == -0.5:
+                    move_board[(x + y * 8) + (i + 1) * 7] = -0.25
+                if move_board[(x + y * 8) + (i + 1) * 7] <= -1:
+                    move_board[(x + y * 8) + (i + 1) * 7] = -0.25
+                    break
+                if move_board[(x + y * 8) + (i + 1) * 7] >= 0:
                     break
         for i in range(8):
-            if (x + y * 8) - (i+1) * 9 >= 0 and (x + y * 8) - (i+1) * 9 < 64 and x - (i+1) > -1:
-                if move_board[(x + y * 8) - (i+1) * 9] == -0.5:
-                    move_board[(x + y * 8) - (i+1) * 9] = -0.25
-                if move_board[(x + y * 8) - (i+1) * 9] <= -1:
-                    move_board[(x + y * 8) - (i+1) * 9] = -0.25
+            if 0 <= (x + y * 8) - (i + 1) * 7 >= 0 < 64 and x + (i + 1) < 8:
+                if move_board[(x + y * 8) - (i + 1) * 7] == -0.5:
+                    move_board[(x + y * 8) - (i + 1) * 7] = -0.25
+                if move_board[(x + y * 8) - (i + 1) * 7] <= -1:
+                    move_board[(x + y * 8) - (i + 1) * 7] = -0.25
                     break
-                if move_board[(x + y * 8) - (i+1) * 9] >= 0:
+                if move_board[(x + y * 8) - (i + 1) * 7] >= 0:
                     break
-        for i in range(8):
-            if (x + y * 8) + (i+1) * 7 >= 0 and (x + y * 8) + (i+1) * 7 < 64 and x - (i+1) > -1:
-                if move_board[(x + y * 8) + (i+1) * 7] == -0.5:
-                    move_board[(x + y * 8) + (i+1) * 7] = -0.25
-                if move_board[(x + y * 8) + (i+1) * 7] <= -1:
-                    move_board[(x + y * 8) + (i+1) * 7] = -0.25
-                    break
-                if move_board[(x + y * 8) + (i+1) * 7] >= 0:
-                    break
-        for i in range(8):
-            if (x + y * 8) - (i+1) * 7 >= 0 and (x + y * 8) - (i+1) * 7 < 64 and x + (i+1) < 8:
-                if move_board[(x + y * 8) - (i+1) * 7] == -0.5:
-                    move_board[(x + y * 8) - (i+1) * 7] = -0.25
-                if move_board[(x + y * 8) - (i+1) * 7] <= -1:
-                    move_board[(x + y * 8) - (i+1) * 7] = -0.25
-                    break
-                if move_board[(x + y * 8) - (i+1) * 7] >= 0:
-                    break
+
         return move_board
 
 
 class BlackKnight(Black):
     def __init__(self):
-        Black.__init__(Black)
+        Black.__init__(self)
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.image.load("sprites/black_knight.png")
         self.rect = self.image.get_rect()
@@ -396,7 +402,7 @@ class BlackKnight(Black):
 
 class WhiteKnight(White):
     def __init__(self):
-        White.__init__(White)
+        White.__init__(self)
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.image.load("sprites/white_knight.png")
         self.rect = self.image.get_rect()
@@ -446,7 +452,7 @@ class WhiteKnight(White):
 
 class BlackRook(Black):
     def __init__(self):
-        Black.__init__(Black)
+        Black.__init__(self)
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.image.load("sprites/black_rook.png")
         self.rect = self.image.get_rect()
@@ -496,7 +502,7 @@ class BlackRook(Black):
 
 class WhiteRook(White):
     def __init__(self):
-        White.__init__(White)
+        White.__init__(self)
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.image.load("sprites/white_rook.png")
         self.rect = self.image.get_rect()
@@ -546,10 +552,11 @@ class WhiteRook(White):
 
 class BlackPawn(Black):
     def __init__(self):
-        Black.__init__(Black)
+        Black.__init__(self)
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.image.load("sprites/black_pawn.png")
         self.rect = self.image.get_rect()
+        self.moved_two = False
 
     def possible_moves(self, board):
         x = int((self.rect.x - 25) / 100)
@@ -561,10 +568,11 @@ class BlackPawn(Black):
                 if y == 1 and move_board[(x+y*8)+16] == -0.5:
                     move_board[(x + y * 8) + 16] = -0.25
 
-            if move_board[(x+y*8)+9] >= 0 and x != 7:
-                move_board[(x + y * 8) + 9] = -0.25
+            if move_board[(x+y*8)+9] < 64:
+                if move_board[(x+y*8)+9] >= 0 and x != 7:
+                    move_board[(x + y * 8) + 9] = -0.25
 
-            if move_board[(x+y*8)+7] >= 0 and x != 1:
+            if move_board[(x+y*8)+7] >= 0 and x != 0:
                 move_board[(x + y * 8) + 7] = -0.25
 
 
@@ -573,24 +581,25 @@ class BlackPawn(Black):
 
 class WhitePawn(White):
     def __init__(self):
-        White.__init__(White)
+        White.__init__(self)
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.image.load("sprites/white_pawn.png")
         self.rect = self.image.get_rect()
+        self.moved_two = False
 
     def possible_moves(self, board):
         x = int((self.rect.x - 25) / 100)
         y = int((self.rect.y - 25) / 100)
         move_board = board[:]
-        if (x + y * 8) + 8 < 64:
+        if (x + y * 8) - 8 >= 0:
             if move_board[(x+y*8)-8] == -0.5:
                 move_board[(x + y * 8)-8] = -0.25
                 if y == 6 and move_board[(x+y*8)-16] == -0.5:
                     move_board[(x + y * 8) - 16] = -0.25
-            if move_board[(x+y*8)-9] <= -1 and x != 1:
+            if move_board[(x+y*8)-9] <= -1 and x != 0:
                 move_board[(x + y * 8) - 9] = -0.25
 
-            if move_board[(x+y*8)-7] <= -1 and x!= 7:
+            if move_board[(x+y*8)-7] <= -1 and x != 7:
                 move_board[(x + y * 8) - 7] = -0.25
 
         return move_board
