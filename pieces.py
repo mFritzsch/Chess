@@ -382,7 +382,7 @@ class BlackKnight(Black):
                     move_board[(x + 8 * y) + 15] = -0.25
 
 
-        if x >= 0:
+        if x >= 2:
             if (x + 8 * y) + 6 < 63:
                 if move_board[(x + 8 * y) + 6] == -0.5 or move_board[(x + 8 * y) + 6] >= 0:
                     move_board[(x + 8 * y) + 6] = -0.25
@@ -432,7 +432,7 @@ class WhiteKnight(White):
                     move_board[(x + 8 * y) + 15] = -0.25
 
 
-        if x >= 0:
+        if x >= 2:
             if (x + 8 * y) + 6 < 63:
                 if move_board[(x + 8 * y) + 6] == -0.5 or move_board[(x + 8 * y) + 6] <= -1:
                     move_board[(x + 8 * y) + 6] = -0.25
@@ -561,10 +561,10 @@ class BlackPawn(Black):
                 if y == 1 and move_board[(x+y*8)+16] == -0.5:
                     move_board[(x + y * 8) + 16] = -0.25
 
-            if move_board[(x+y*8)+9] >= 0:
+            if move_board[(x+y*8)+9] >= 0 and x != 7:
                 move_board[(x + y * 8) + 9] = -0.25
 
-            if move_board[(x+y*8)+7] >= 0:
+            if move_board[(x+y*8)+7] >= 0 and x != 1:
                 move_board[(x + y * 8) + 7] = -0.25
 
 
@@ -587,10 +587,10 @@ class WhitePawn(White):
                 move_board[(x + y * 8)-8] = -0.25
                 if y == 6 and move_board[(x+y*8)-16] == -0.5:
                     move_board[(x + y * 8) - 16] = -0.25
-            if move_board[(x+y*8)-9] <= -1:
+            if move_board[(x+y*8)-9] <= -1 and x != 1:
                 move_board[(x + y * 8) - 9] = -0.25
 
-            if move_board[(x+y*8)-7] <= -1:
+            if move_board[(x+y*8)-7] <= -1 and x!= 7:
                 move_board[(x + y * 8) - 7] = -0.25
 
         return move_board
