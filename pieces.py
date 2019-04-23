@@ -4,6 +4,7 @@ import pygame
 class AnyPiece(pygame.sprite.Sprite):
     def __init__(self):
         self.selected = False
+        self.move_counter = 0
 
     def set_x_and_y(self, new_x, new_y):
         self.rect.x = new_x
@@ -561,7 +562,7 @@ class BlackPawn(Black):
                 move_board[(x + y * 8)+8] = -0.25
                 if y == 1 and move_board[(x+y*8)+16] == -0.5:
                     move_board[(x + y * 8) + 16] = -0.25
-            if move_board[(x+y*8)+9] < 64:
+            if (x+y*8)+9 < 64:
                 if move_board[(x+y*8)+9] >= 0 and x != 7:
                     move_board[(x + y * 8) + 9] = -0.25
             if move_board[(x+y*8)-1] >= 0:
