@@ -29,14 +29,14 @@ class BlackKing(Black):
         self.image = pygame.image.load("sprites/black_king.png")
         self.rect = self.image.get_rect()
 
-    def possible_moves(self, board):
+    def possible_moves(self, board, existing_pieces):
         x = int((self.rect.x - 25) / 100)
         y = int((self.rect.y - 25) / 100)
         move_board = board[:]
 
         for i in range(3):
             for j in range(3):
-                if 0 < (x + y * 8 - 9) + i + 8 * j < 64 and 8 > (x-1) + i > -1:
+                if 0 <= (x + y * 8 - 9) + i + 8 * j < 64 and 8 > (x-1) + i > -1:
                     if move_board[(x + y * 8 - 9) + i + 8 * j] == -0.5 or move_board[(x + y * 8 - 9) + i + 8 * j] >= 0:
                         move_board[(x + y * 8 - 9) + i + 8 * j] = -0.25
         return move_board
@@ -49,14 +49,14 @@ class WhiteKing(White):
         self.image = pygame.image.load("sprites/white_king.png")
         self.rect = self.image.get_rect()
 
-    def possible_moves(self, board):
+    def possible_moves(self, board, existing_pieces):
         x = int((self.rect.x - 25) / 100)
         y = int((self.rect.y - 25) / 100)
         move_board = board[:]
 
         for i in range(3):
             for j in range(3):
-                if 0 < (x + y * 8 - 9) + i + 8 * j < 64 and 8 > (x-1) + i > -1:
+                if 0 <= (x + y * 8 - 9) + i + 8 * j < 64 and 8 > (x-1) + i > -1:
                     if move_board[(x + y * 8 - 9) + i + 8 * j] == -0.5 or move_board[(x + y * 8 - 9) + i + 8 * j] <= -1:
                         move_board[(x + y * 8 - 9) + i + 8 * j] = -0.25
         return move_board
@@ -69,7 +69,7 @@ class BlackQueen(Black):
         self.image = pygame.image.load("sprites/black_queen.png")
         self.rect = self.image.get_rect()
 
-    def possible_moves(self, board):
+    def possible_moves(self, board, existing_pieces):
         x = int((self.rect.x - 25) / 100)
         y = int((self.rect.y - 25) / 100)
         move_board = board[:]
@@ -159,7 +159,7 @@ class WhiteQueen(White):
         self.image = pygame.image.load("sprites/white_queen.png")
         self.rect = self.image.get_rect()
 
-    def possible_moves(self, board):
+    def possible_moves(self, board, existing_pieces):
         x = int((self.rect.x - 25) / 100)
         y = int((self.rect.y - 25) / 100)
         move_board = board[:]
@@ -248,7 +248,7 @@ class BlackBishop(Black):
         self.image = pygame.image.load("sprites/black_bishop.png")
         self.rect = self.image.get_rect()
 
-    def possible_moves(self, board):
+    def possible_moves(self, board, existing_pieces):
         x = int((self.rect.x - 25) / 100)
         y = int((self.rect.y - 25) / 100)
         move_board = board[:]
@@ -303,7 +303,7 @@ class WhiteBishop(White):
         self.image = pygame.image.load("sprites/white_bishop.png")
         self.rect = self.image.get_rect()
 
-    def possible_moves(self, board):
+    def possible_moves(self, board, existing_pieces):
         x = int((self.rect.x - 25) / 100)
         y = int((self.rect.y - 25) / 100)
         move_board = board[:]
@@ -357,7 +357,7 @@ class BlackKnight(Black):
         self.image = pygame.image.load("sprites/black_knight.png")
         self.rect = self.image.get_rect()
 
-    def possible_moves(self, board):
+    def possible_moves(self, board, existing_pieces):
         x = int((self.rect.x - 25) / 100)
         y = int((self.rect.y - 25) / 100)
         move_board = board[:]
@@ -378,7 +378,6 @@ class BlackKnight(Black):
                 if move_board[(x + 8 * y) + 17] == -0.5 or move_board[(x + 8 * y) + 17] >= 0:
                     move_board[(x + 8 * y) + 17] = -0.25
 
-
         if x > 0:
             if (x + 8 * y) - 17 > 0:
                 if move_board[(x + 8 * y) - 17] == -0.5 or move_board[(x + 8 * y) - 17] >= 0:
@@ -387,7 +386,6 @@ class BlackKnight(Black):
                 if move_board[(x + 8 * y) + 15] == -0.5 or move_board[(x + 8 * y) + 15] >= 0:
                     move_board[(x + 8 * y) + 15] = -0.25
 
-
         if x >= 2:
             if (x + 8 * y) + 6 < 63:
                 if move_board[(x + 8 * y) + 6] == -0.5 or move_board[(x + 8 * y) + 6] >= 0:
@@ -395,7 +393,6 @@ class BlackKnight(Black):
             if (x + 8 * y) - 10 > 0:
                 if move_board[(x + 8 * y) - 10] == -0.5 or move_board[(x + 8 * y) - 10] >= 0:
                     move_board[(x + 8 * y) - 10] = -0.25
-
 
         return move_board
 
@@ -407,7 +404,7 @@ class WhiteKnight(White):
         self.image = pygame.image.load("sprites/white_knight.png")
         self.rect = self.image.get_rect()
 
-    def possible_moves(self, board):
+    def possible_moves(self, board, existing_pieces):
         x = int((self.rect.x - 25) / 100)
         y = int((self.rect.y - 25) / 100)
         move_board = board[:]
@@ -428,7 +425,6 @@ class WhiteKnight(White):
                 if move_board[(x + 8 * y) + 17] == -0.5 or move_board[(x + 8 * y) + 17] <= -1:
                     move_board[(x + 8 * y) + 17] = -0.25
 
-
         if x > 0:
             if (x + 8 * y) - 17 > 0:
                 if move_board[(x + 8 * y) - 17] == -0.5 or move_board[(x + 8 * y) - 17] <= -1:
@@ -437,7 +433,6 @@ class WhiteKnight(White):
                 if move_board[(x + 8 * y) + 15] == -0.5 or move_board[(x + 8 * y) + 15] <= -1:
                     move_board[(x + 8 * y) + 15] = -0.25
 
-
         if x >= 2:
             if (x + 8 * y) + 6 < 63:
                 if move_board[(x + 8 * y) + 6] == -0.5 or move_board[(x + 8 * y) + 6] <= -1:
@@ -445,7 +440,6 @@ class WhiteKnight(White):
             if (x + 8 * y) - 10 > 0:
                 if move_board[(x + 8 * y) - 10] == -0.5 or move_board[(x + 8 * y) - 10] <= -1:
                     move_board[(x + 8 * y) - 10] = -0.25
-
 
         return move_board
 
@@ -457,7 +451,7 @@ class BlackRook(Black):
         self.image = pygame.image.load("sprites/black_rook.png")
         self.rect = self.image.get_rect()
 
-    def possible_moves(self, board):
+    def possible_moves(self, board, existing_pieces):
         x = int((self.rect.x - 25) / 100)
         y = int((self.rect.y - 25) / 100)
         move_board = board[:]
@@ -507,7 +501,7 @@ class WhiteRook(White):
         self.image = pygame.image.load("sprites/white_rook.png")
         self.rect = self.image.get_rect()
 
-    def possible_moves(self, board):
+    def possible_moves(self, board, existing_pieces):
         x = int((self.rect.x - 25) / 100)
         y = int((self.rect.y - 25) / 100)
         move_board = board[:]
@@ -558,7 +552,7 @@ class BlackPawn(Black):
         self.rect = self.image.get_rect()
         self.moved_two = False
 
-    def possible_moves(self, board):
+    def possible_moves(self, board, existing_pieces):
         x = int((self.rect.x - 25) / 100)
         y = int((self.rect.y - 25) / 100)
         move_board = board[:]
@@ -567,14 +561,19 @@ class BlackPawn(Black):
                 move_board[(x + y * 8)+8] = -0.25
                 if y == 1 and move_board[(x+y*8)+16] == -0.5:
                     move_board[(x + y * 8) + 16] = -0.25
-
             if move_board[(x+y*8)+9] < 64:
                 if move_board[(x+y*8)+9] >= 0 and x != 7:
                     move_board[(x + y * 8) + 9] = -0.25
-
+            if move_board[(x+y*8)-1] >= 0:
+                if isinstance(existing_pieces[move_board[(x+y*8)-1]], WhitePawn):
+                    if existing_pieces[move_board[(x+y*8)-1]].moved_two:
+                        move_board[(x + y * 8) + 7] = -0.25
+            if move_board[(x+y*8)+1] >= 0:
+                if isinstance(existing_pieces[move_board[(x+y*8)+1]], WhitePawn):
+                    if existing_pieces[move_board[(x+y*8)+1]].moved_two:
+                        move_board[(x + y * 8) + 9] = -0.25
             if move_board[(x+y*8)+7] >= 0 and x != 0:
                 move_board[(x + y * 8) + 7] = -0.25
-
 
         return move_board
 
@@ -587,7 +586,7 @@ class WhitePawn(White):
         self.rect = self.image.get_rect()
         self.moved_two = False
 
-    def possible_moves(self, board):
+    def possible_moves(self, board, existing_pieces):
         x = int((self.rect.x - 25) / 100)
         y = int((self.rect.y - 25) / 100)
         move_board = board[:]
@@ -598,9 +597,16 @@ class WhitePawn(White):
                     move_board[(x + y * 8) - 16] = -0.25
             if move_board[(x+y*8)-9] <= -1 and x != 0:
                 move_board[(x + y * 8) - 9] = -0.25
-
+            if move_board[(x+y*8)-1] <= -1:
+                if isinstance(existing_pieces[move_board[(x+y*8)-1]], BlackPawn):
+                    if existing_pieces[move_board[(x+y*8)-1]].moved_two:
+                        move_board[(x + y * 8) - 9] = -0.25
+            if move_board[(x+y*8)+1] <= -1:
+                if isinstance(existing_pieces[move_board[(x+y*8)+1]], BlackPawn):
+                    if existing_pieces[move_board[(x+y*8)+1]].moved_two:
+                        move_board[(x + y * 8) - 7] = -0.25
             if move_board[(x+y*8)-7] <= -1 and x != 7:
                 move_board[(x + y * 8) - 7] = -0.25
 
-        return move_board
 
+        return move_board

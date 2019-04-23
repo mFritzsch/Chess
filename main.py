@@ -55,7 +55,7 @@ black_pawn8 = pieces.BlackPawn()
 
 all_sprites = pygame.sprite.Group()
 existing_pieces = [white_pawn1, white_pawn2, white_pawn3, white_pawn4, white_pawn5, white_pawn6, white_pawn7,
-                   white_pawn8, white_rook1, white_knight1, white_bishop1, white_queen, white_king,white_bishop2,
+                   white_pawn8, white_rook1, white_knight1, white_bishop1, white_queen, white_king, white_bishop2,
                    white_knight2, white_rook2,
                    black_pawn1, black_pawn2, black_pawn3, black_pawn4, black_pawn5, black_pawn6, black_pawn7,
                    black_pawn8, black_rook1, black_knight1, black_bishop1, black_king, black_queen, black_bishop2,
@@ -66,10 +66,10 @@ all_sprites.add(existing_pieces)
 
 def check_square(pos):
     if board[pos] <= -1:
-        piece = existing_pieces[board[pos] ]
+        piece = existing_pieces[board[pos]]
         return piece
     elif board[pos] >= 0:
-        piece = existing_pieces[board[pos] ]
+        piece = existing_pieces[board[pos]]
         return piece
 
 
@@ -123,7 +123,7 @@ def checkmate_prevent(board, move_board, existing_pieces):
                         test_board[j] = -0.5
                         for a in range(len(test_board)):
                             if test_board[a] >= 0:
-                                test_move_board = existing_pieces[test_board[a]].possible_moves(test_board)
+                                test_move_board = existing_pieces[test_board[a]].possible_moves(test_board, existing_pieces)
                                 for k in range(len(test_board)):
                                     if test_board[k] == -5:
                                         if test_move_board[k] == -0.25:
@@ -137,7 +137,7 @@ def checkmate_prevent(board, move_board, existing_pieces):
                         test_board[j] = -0.5
                         for a in range(len(test_board)):
                             if test_board[a] <= -1:
-                                test_move_board = existing_pieces[test_board[a]].possible_moves(test_board)
+                                test_move_board = existing_pieces[test_board[a]].possible_moves(test_board, existing_pieces)
                                 for k in range(len(test_board)):
                                     if test_board[k] == 12:
                                         if test_move_board[k] == -0.25:
@@ -188,6 +188,15 @@ def move_piece(board, move_board, existing_pieces, rounds):
                     for i in range(len(board)):
                         if board[i] >= 0:
                             if existing_pieces[board[i]].selected:
+                                if isinstance(existing_pieces[board[i]], pieces.WhitePawn):
+                                    if position == i - 16:
+                                        existing_pieces[board[i]].moved_two = True
+                                    elif position + 8 < 64:
+                                        if board[position + 8] != -0.5:
+                                            if isinstance(existing_pieces[board[position + 8]], pieces.BlackPawn):
+                                                if existing_pieces[board[position + 8]].moved_two:
+                                                    all_sprites.remove(existing_pieces[board[position + 8]])
+                                                    board[position + 8] = -0.5
                                 existing_pieces[board[i]].selected = False
                                 rounds += 1
                                 if board[position] != -0.5:
@@ -195,10 +204,20 @@ def move_piece(board, move_board, existing_pieces, rounds):
                                 board[position] = board[i]
                                 board[i] = -0.5
                                 promotion(position)
-                                move_board = [0] * 64
+                                move_board = [-0.5] * 64
                                 break
                         elif board[i] <= -1:
                             if existing_pieces[board[i]].selected:
+                                if isinstance(existing_pieces[board[i]], pieces.BlackPawn):
+                                    if position == i + 16:
+                                        existing_pieces[board[i]].moved_two = True
+                                    elif 0 <= position - 8:
+                                        if board[position - 8] != -0.5:
+                                            if isinstance(existing_pieces[board[position - 8]], pieces.WhitePawn):
+                                                if existing_pieces[board[position - 8]].moved_two:
+                                                    all_sprites.remove(existing_pieces[board[position - 8]])
+                                                    board[position - 8] = -0.5
+                                existing_pieces[board[i]].selected = False
                                 existing_pieces[board[i]].selected = False
                                 rounds += 1
                                 if board[position] != -0.5:
@@ -216,16 +235,18 @@ def move_piece(board, move_board, existing_pieces, rounds):
                             for j in range(len(move_board)):
                                 if move_board[j] == -0.25:
                                     move_board[j] = -0.5
+                            break
                     if check_square(position).colour == "white" and rounds % 2 == 0 or \
                             check_square(position).colour == "black" and rounds % 2 != 0:
                         check_square(position).selected = True
     for i in range(len(existing_pieces)):
         if existing_pieces[i].selected:
 
-            move_board = existing_pieces[i].possible_moves(board)
+            move_board = existing_pieces[i].possible_moves(board, existing_pieces)
             move_board = checkmate_prevent(board, move_board, existing_pieces)
 
     return board, move_board, existing_pieces, rounds
+
 
 while True:
     if rounds == 0:
@@ -233,5 +254,13 @@ while True:
     draw_board()
     pygame.display.update()
     board, move_board, existing_pieces, rounds = move_piece(board, move_board, existing_pieces, rounds)
+    for i in range(len(existing_pieces)):
+            if rounds % 2 == 0:
+                if isinstance(existing_pieces[i], pieces.WhitePawn):
+                    existing_pieces[i].moved_two = False
+            else:
+                if isinstance(existing_pieces[i], pieces.BlackPawn):
+                    existing_pieces[i].moved_two = False
+
 
 # pygame.quit()
