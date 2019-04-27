@@ -10,6 +10,10 @@ class AnyPiece(pygame.sprite.Sprite):
         self.rect.x = new_x
         self.rect.y = new_y
 
+    def get_value(self, board, position):
+
+        return self.point_value + self.piece_square_table[position]
+
 
 class White(AnyPiece):
     def __init__(self):
@@ -29,6 +33,24 @@ class BlackKing(Black):
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.image.load("sprites/black_king.png")
         self.rect = self.image.get_rect()
+        self.point_value = 20000
+        self.piece_square_table = [20, 30, 10, 0, 0, 10, 30, 20,
+                                   20, 20, 0, 0, 0, 0, 20, 20,
+                                   -10, -20, -20, -20, -20, -20, -20, -10,
+                                   -20, -30, -30, -40, -40, -30, -30, -20,
+                                   -30, -40, -40, -50, -50, -40, -40, -30,
+                                   -30, -40, -40, -50, -50, -40, -40, -30,
+                                   -30, -40, -40, -50, -50, -40, -40, -30,
+                                   -30, -40, -40, -50, -50, -40, -40, -30]
+
+        self.endgame_piece_square_table = [-50, -30, -30, -30, -30, -30, -30, -50,
+                                           - 30, -30, 0, 0, 0, 0, -30, -30,
+                                           -30, -10, 20, 30, 30, 20, -10, -30,
+                                           -30, -10, 30, 40, 40, 30, -10, -30,
+                                           -30, -10, 30, 40, 40, 30, -10, -30,
+                                           -30, -10, 20, 30, 30, 20, -10, -30,
+                                           -30, -20, -10, 0, 0, -10, -20, -30,
+                                           -50, -40, -30, -20, -20, -30, -40, -50]
 
     def possible_moves(self, board, existing_pieces):
         x = int((self.rect.x - 25) / 100)
@@ -49,6 +71,23 @@ class WhiteKing(White):
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.image.load("sprites/white_king.png")
         self.rect = self.image.get_rect()
+        self.point_value = 20000
+        self.piece_square_table = [-30,-40,-40,-50,-50,-40,-40,-30,
+                                    -30,-40,-40,-50,-50,-40,-40,-30,
+                                    -30,-40,-40,-50,-50,-40,-40,-30,
+                                    -30,-40,-40,-50,-50,-40,-40,-30,
+                                    -20,-30,-30,-40,-40,-30,-30,-20,
+                                    -10,-20,-20,-20,-20,-20,-20,-10,
+                                     20, 20,  0,  0,  0,  0, 20, 20,
+                                     20, 30, 10,  0,  0, 10, 30, 20]
+        self.endgame_piece_square_table = [-50,-40,-30,-20,-20,-30,-40,-50,
+                                            -30,-20,-10,  0,  0,-10,-20,-30,
+                                            -30,-10, 20, 30, 30, 20,-10,-30,
+                                            -30,-10, 30, 40, 40, 30,-10,-30,
+                                            -30,-10, 30, 40, 40, 30,-10,-30,
+                                            -30,-10, 20, 30, 30, 20,-10,-30,
+                                            -30,-30,  0,  0,  0,  0,-30,-30,
+                                            -50,-30,-30,-30,-30,-30,-30,-50]
 
     def possible_moves(self, board, existing_pieces):
         x = int((self.rect.x - 25) / 100)
@@ -69,6 +108,15 @@ class BlackQueen(Black):
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.image.load("sprites/black_queen.png")
         self.rect = self.image.get_rect()
+        self.point_value = 900
+        self.piece_square_table = [-20, -10, -10, -5, -5, -10, -10, -20,
+                                   -10, 0, 5, 0, 0, 0, 0, -10,
+                                   -10, 5, 5, 5, 5, 5, 0, -10,
+                                   0, 0, 5, 5, 5, 5, 0, -5,
+                                   -5, 0, 5, 5, 5, 5, 0, -5,
+                                   -10, 0, 5, 5, 5, 5, 0, -10,
+                                   -10, 0, 0, 0, 0, 0, 0, -10,
+                                   -20, -10, -10, -5, -5, -10, -10, -20]
 
     def possible_moves(self, board, existing_pieces):
         x = int((self.rect.x - 25) / 100)
@@ -159,6 +207,15 @@ class WhiteQueen(White):
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.image.load("sprites/white_queen.png")
         self.rect = self.image.get_rect()
+        self.point_value = 900
+        self.piece_square_table = [-20,-10,-10, -5, -5,-10,-10,-20,
+                                    -10,  0,  0,  0,  0,  0,  0,-10,
+                                    -10,  0,  5,  5,  5,  5,  0,-10,
+                                     -5,  0,  5,  5,  5,  5,  0, -5,
+                                      0,  0,  5,  5,  5,  5,  0, -5,
+                                    -10,  5,  5,  5,  5,  5,  0,-10,
+                                    -10,  0,  5,  0,  0,  0,  0,-10,
+                                    -20,-10,-10, -5, -5,-10,-10,-20]
 
     def possible_moves(self, board, existing_pieces):
         x = int((self.rect.x - 25) / 100)
@@ -248,6 +305,15 @@ class BlackBishop(Black):
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.image.load("sprites/black_bishop.png")
         self.rect = self.image.get_rect()
+        self.point_value = 330
+        self.piece_square_table = [-20, -10, -10, -10, -10, -10, -10, -20,
+                                   -10, 5, 0, 0, 0, 0, 5, -10,
+                                   -10, 10, 10, 10, 10, 10, 10, -10,
+                                   -10, 0, 10, 10, 10, 10, 0, -10,
+                                   -10, 5, 5, 10, 10, 5, 5, -10,
+                                   -10, 0, 5, 10, 10, 5, 0, -10,
+                                   -10, 0, 0, 0, 0, 0, 0, -10,
+                                   -20, -10, -10, -10, -10, -10, -10, -20]
 
     def possible_moves(self, board, existing_pieces):
         x = int((self.rect.x - 25) / 100)
@@ -303,6 +369,15 @@ class WhiteBishop(White):
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.image.load("sprites/white_bishop.png")
         self.rect = self.image.get_rect()
+        self.point_value = 330
+        self.piece_square_table = [-20,-10,-10,-10,-10,-10,-10,-20,
+                                    -10,  0,  0,  0,  0,  0,  0,-10,
+                                    -10,  0,  5, 10, 10,  5,  0,-10,
+                                    -10,  5,  5, 10, 10,  5,  5,-10,
+                                    -10,  0, 10, 10, 10, 10,  0,-10,
+                                    -10, 10, 10, 10, 10, 10, 10,-10,
+                                    -10,  5,  0,  0,  0,  0,  5,-10,
+                                    -20,-10,-10,-10,-10,-10,-10,-20]
 
     def possible_moves(self, board, existing_pieces):
         x = int((self.rect.x - 25) / 100)
@@ -357,6 +432,15 @@ class BlackKnight(Black):
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.image.load("sprites/black_knight.png")
         self.rect = self.image.get_rect()
+        self.point_value = 320
+        self.piece_square_table = [-50, -40, -30, -30, -30, -30, -40, -50,
+                                   -40, -20, 0, 5, 5, 0, -20, -40,
+                                   -30, 5, 10, 15, 15, 10, 5, -30,
+                                   -30, 0, 15, 20, 20, 15, 0, -30,
+                                   -30, 5, 15, 20, 20, 15, 5, -30,
+                                   -30, 0, 10, 15, 15, 10, 0, -30,
+                                   -40, -20, 0, 0, 0, 0, -20, -40,
+                                   -50, -40, -30, -30, -30, -30, -40, -50]
 
     def possible_moves(self, board, existing_pieces):
         x = int((self.rect.x - 25) / 100)
@@ -404,6 +488,15 @@ class WhiteKnight(White):
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.image.load("sprites/white_knight.png")
         self.rect = self.image.get_rect()
+        self.point_value = 320
+        self.piece_square_table = [-50,-40,-30,-30,-30,-30,-40,-50,
+                                    -40,-20,  0,  0,  0,  0,-20,-40,
+                                    -30,  0, 10, 15, 15, 10,  0,-30,
+                                    -30,  5, 15, 20, 20, 15,  5,-30,
+                                    -30,  0, 15, 20, 20, 15,  0,-30,
+                                    -30,  5, 10, 15, 15, 10,  5,-30,
+                                    -40,-20,  0,  5,  5,  0,-20,-40,
+                                    -50,-40,-30,-30,-30,-30,-40,-50]
 
     def possible_moves(self, board, existing_pieces):
         x = int((self.rect.x - 25) / 100)
@@ -451,6 +544,15 @@ class BlackRook(Black):
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.image.load("sprites/black_rook.png")
         self.rect = self.image.get_rect()
+        self.point_value = 500
+        self.piece_square_table = [0, 0, 0, 5, 5, 0, 0, 0,
+                                   - 5, 0, 0, 0, 0, 0, 0, -5,
+                                   -5, 0, 0, 0, 0, 0, 0, -5
+                                   - 5, 0, 0, 0, 0, 0, 0, -5,
+                                   -5, 0, 0, 0, 0, 0, 0, -5,
+                                   -5, 0, 0, 0, 0, 0, 0, -5,
+                                   5, 10, 10, 10, 10, 10, 10, 5,
+                                   0, 0, 0, 0, 0, 0, 0, 0]
 
     def possible_moves(self, board, existing_pieces):
         x = int((self.rect.x - 25) / 100)
@@ -501,6 +603,15 @@ class WhiteRook(White):
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.image.load("sprites/white_rook.png")
         self.rect = self.image.get_rect()
+        self.point_value = 500
+        self.piece_square_table =[0,  0,  0,  0,  0,  0,  0,  0,
+                                  5, 10, 10, 10, 10, 10, 10,  5,
+                                 -5,  0,  0,  0,  0,  0,  0, -5,
+                                 -5,  0,  0,  0,  0,  0,  0, -5,
+                                 -5,  0,  0,  0,  0,  0,  0, -5,
+                                 -5,  0,  0,  0,  0,  0,  0, -5,
+                                 -5,  0,  0,  0,  0,  0,  0, -5,
+                                  0,  0,  0,  5,  5,  0,  0,  0]
 
     def possible_moves(self, board, existing_pieces):
         x = int((self.rect.x - 25) / 100)
@@ -551,7 +662,16 @@ class BlackPawn(Black):
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.image.load("sprites/black_pawn.png")
         self.rect = self.image.get_rect()
+        self.point_value = 100
         self.moved_two = False
+        self.piece_square_table = [ 0,  0,  0,  0,  0,  0,  0,  0,
+                                    5, 10, 10, -20, -20, 10, 10, 5,
+                                    5, -5, -10, 0, 0, -10, -5, 5,
+                                    0, 0, 0, 20, 20, 0, 0, 0,
+                                    5, 5, 10, 25, 25, 10, 5, 5,
+                                    10, 10, 20, 30, 30, 20, 10, 10,
+                                    50, 50, 50, 50, 50, 50, 50, 50,
+                                     0,  0,  0,  0,  0,  0,  0,  0]
 
     def possible_moves(self, board, existing_pieces):
         x = int((self.rect.x - 25) / 100)
@@ -585,7 +705,16 @@ class WhitePawn(White):
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.image.load("sprites/white_pawn.png")
         self.rect = self.image.get_rect()
+        self.point_value = 100
         self.moved_two = False
+        self.piece_square_table = [ 0,  0,  0,  0,  0,  0,  0,  0,
+                                    50, 50, 50, 50, 50, 50, 50, 50,
+                                    10, 10, 20, 30, 30, 20, 10, 10,
+                                     5,  5, 10, 25, 25, 10,  5,  5,
+                                     0,  0,  0, 20, 20,  0,  0,  0,
+                                     5, -5,-10,  0,  0,-10, -5,  5,
+                                     5, 10, 10,-20,-20, 10, 10,  5,
+                                     0,  0,  0,  0,  0,  0,  0,  0]
 
     def possible_moves(self, board, existing_pieces):
         x = int((self.rect.x - 25) / 100)

@@ -16,7 +16,7 @@ def start_game(board):
     for i in range(16):
         board[48 + i] = i
     for i in range(16):
-        board[i] = -i - 1
+        board[i] = -1 - i
 
 
 white_king = pieces.WhiteKing()
@@ -63,16 +63,6 @@ existing_pieces = [white_pawn1, white_pawn2, white_pawn3, white_pawn4, white_paw
                    ]
 all_sprites.add(existing_pieces)
 
-
-def check_square(pos):
-    if board[pos] <= -1:
-        piece = existing_pieces[board[pos]]
-        return piece
-    elif board[pos] >= 0:
-        piece = existing_pieces[board[pos]]
-        return piece
-
-
 def draw_board():
     # draws the outlines of the board
     pygame.draw.rect(win, (255, 255, 255), (20, 20, 5, 810))
@@ -113,7 +103,7 @@ def hostile(a, b):
 
 
 def checkmate_prevent(board, move_board, existing_pieces):
-    for j in range(len(board)):
+    for j in range(64):
         if board[j] <= -1:
             if existing_pieces[board[j]].selected:
                 for i in range(len(move_board)):
@@ -146,7 +136,7 @@ def checkmate_prevent(board, move_board, existing_pieces):
 
 
 def promotion(position):
-    if 0 <= position <= 7 and isinstance(existing_pieces[board[position]], pieces.WhitePawn):
+    if 0 <= position <= 7 and board[position] != -0.5 and isinstance(existing_pieces[board[position]], pieces.WhitePawn):
         user_input = -1
         while user_input < 1 or user_input > 4:
             user_input = int(input("enter 1 for Rook, 2 for Queen, 3 for Bishop and "
@@ -161,7 +151,7 @@ def promotion(position):
             elif user_input == 4:
                 existing_pieces[board[position]] = pieces.WhiteKnight()
             all_sprites.add(existing_pieces[board[position]])
-    if 56 <= position <= 63 and isinstance(existing_pieces[board[position]], pieces.BlackPawn):
+    if 56 <= position <= 63 and board[position] != -0.5 and isinstance(existing_pieces[board[position]], pieces.BlackPawn):
         user_input = -1
         while user_input < 1 or user_input > 4:
             user_input = int(input("enter 1 for Rook, 2 for Queen, 3 for Bishop and "
@@ -185,7 +175,7 @@ def castling(move_board):
         if existing_pieces[8].move_counter == 0 and existing_pieces[12].move_counter == 0:
             if board[59] == -0.5 and board[58] == -0.5:
                 queenside = True
-                for i in range(len(board)):
+                for i in range(64):
                     if board[i] <= -1:
                         potential_moves = existing_pieces[board[i]].possible_moves(board, existing_pieces)
                         if potential_moves[58] == -0.25 or potential_moves[59] == -0.25 or potential_moves[60] == -0.25:
@@ -193,7 +183,7 @@ def castling(move_board):
         if existing_pieces[12].move_counter == 0 and existing_pieces[15].move_counter == 0:
             if board[61] == -0.5 and board[62] == -0.5:
                 kingside = True
-                for i in range(len(board)):
+                for i in range(64):
                     if board[i] <= -1:
                         potential_moves = existing_pieces[board[i]].possible_moves(board, existing_pieces)
                         if potential_moves[60] == -0.25 or potential_moves[61] == -0.25 or potential_moves[62] == -0.25:
@@ -203,18 +193,18 @@ def castling(move_board):
         if kingside:
             move_board[62] = -0.25
     else:
-        if existing_pieces[24].move_counter == 0 and existing_pieces[28].move_counter == 0:
+        if existing_pieces[24].move_counter == 0 and existing_pieces[27].move_counter == 0:
             if board[3] == -0.5 and board[2] == -0.5 and board[1] == -0.5:
                 queenside = True
-                for i in range(len(board)):
+                for i in range(64):
                     if board[i] >= 0:
                         potential_moves = existing_pieces[board[i]].possible_moves(board, existing_pieces)
                         if potential_moves[2] == -0.25 or potential_moves[3] == -0.25 or potential_moves[4] == -0.25:
                             queenside = False
-        if existing_pieces[28].move_counter == 0 and existing_pieces[31].move_counter == 0:
-            if board[5] == -0.5:
+        if existing_pieces[27].move_counter == 0 and existing_pieces[31].move_counter == 0:
+            if board[5] == -0.5 and board[6] == -0.5:
                 kingside = True
-                for i in range(len(board)):
+                for i in range(64):
                     if board[i] >= 0:
                         potential_moves = existing_pieces[board[i]].possible_moves(board, existing_pieces)
                         if potential_moves[4] == -0.25 or potential_moves[5] == -0.25 or potential_moves[6] == -0.25:
@@ -225,84 +215,71 @@ def castling(move_board):
             move_board[6] = -0.25
     return move_board
 
+def move_piece(board, move_board, existing_pieces, game_rounds, position):
+    if position < 64:
+        if move_board[position] == -0.25:
+            for i in range(64):
+                if board[i] >= 0:
+                    if existing_pieces[board[i]].selected:
+                        if isinstance(existing_pieces[board[i]], pieces.WhitePawn):
+                            if position == i - 16:
+                                existing_pieces[board[i]].moved_two = True
+                            elif position + 8 < 64 and board[position + 8] != -0.5 and \
+                                    isinstance(existing_pieces[board[position + 8]], pieces.BlackPawn) and \
+                                    existing_pieces[board[position + 8]].moved_two:
+                                board[position + 8] = -0.5
+                        if isinstance(existing_pieces[board[i]], pieces.WhiteKing):
+                            if position == i - 2:
+                                board[i - 1] = board[56]
+                                board[56] = -0.5
+                            if position == i + 2:
+                                board[i + 1] = board[63]
+                                board[63] = -0.5
+                        existing_pieces[board[i]].selected = False
+                        existing_pieces[board[i]].move_counter += 1
+                        game_rounds += 1
+                        board[position] = board[i]
+                        board[i] = -0.5
+                        promotion(position)
+                        move_board = [-0.5] * 64
+                        break
+                elif board[i] <= -1:
+                    if existing_pieces[board[i]].selected:
+                        if isinstance(existing_pieces[board[i]], pieces.BlackPawn):
+                            if position == i + 16:
+                                existing_pieces[board[i]].moved_two = True
+                            elif 0 <= position - 8 and board[position - 8] != -0.5 and \
+                                    isinstance(existing_pieces[board[position - 8]], pieces.WhitePawn) and \
+                                    existing_pieces[board[position - 8]].moved_two:
+                                            board[position - 8] = -0.5
+                        if isinstance(existing_pieces[board[i]], pieces.BlackKing):
+                            if position == i - 2:
+                                board[i - 1] = board[0]
+                                board[0] = -0.5
+                            if position == i + 2:
+                                board[i + 1] = board[7]
+                                board[7] = -0.5
+                        existing_pieces[board[i]].selected = False
+                        existing_pieces[board[i]].move_counter += 1
+                        game_rounds += 1
+                        board[position] = board[i]
+                        board[i] = -0.5
+                        promotion(position)
+                        move_board = [-0.5] * 64
+                        break
 
-def move_piece(board, move_board, existing_pieces, rounds):
-    for event in pygame.event.get():
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            x_pos, y_pos = pygame.mouse.get_pos()
-            position = (int(x_pos / 100 - 0.25)) + 8 * (int(y_pos / 100 - 0.25))
-            if position < 64:
-                if move_board[position] == -0.25:
-                    for i in range(len(board)):
-                        if board[i] >= 0:
-                            if existing_pieces[board[i]].selected:
-                                if isinstance(existing_pieces[board[i]], pieces.WhitePawn):
-                                    if position == i - 16:
-                                        existing_pieces[board[i]].moved_two = True
-                                    elif position + 8 < 64:
-                                        if board[position + 8] != -0.5:
-                                            if isinstance(existing_pieces[board[position + 8]], pieces.BlackPawn):
-                                                if existing_pieces[board[position + 8]].moved_two:
-                                                    all_sprites.remove(existing_pieces[board[position + 8]])
-                                                    board[position + 8] = -0.5
-                                if isinstance(existing_pieces[board[i]], pieces.WhiteKing):
-                                    if position == i - 2:
-                                        board[i - 1] = board[56]
-                                        board[56] = -0.5
-                                    if position == i + 2:
-                                        board[i + 1] = board[63]
-                                        board[63] = -0.5
-                                existing_pieces[board[i]].selected = False
-                                existing_pieces[board[i]].move_counter += 1
-                                rounds += 1
-                                if board[position] != -0.5:
-                                    all_sprites.remove(existing_pieces[board[position]])
-                                board[position] = board[i]
-                                board[i] = -0.5
-                                promotion(position)
-                                move_board = [-0.5] * 64
-                                break
-                        elif board[i] <= -1:
-                            if existing_pieces[board[i]].selected:
-                                if isinstance(existing_pieces[board[i]], pieces.BlackPawn):
-                                    if position == i + 16:
-                                        existing_pieces[board[i]].moved_two = True
-                                    elif 0 <= position - 8:
-                                        if board[position - 8] != -0.5:
-                                            if isinstance(existing_pieces[board[position - 8]], pieces.WhitePawn):
-                                                if existing_pieces[board[position - 8]].moved_two:
-                                                    all_sprites.remove(existing_pieces[board[position - 8]])
-                                                    board[position - 8] = -0.5
-                                if isinstance(existing_pieces[board[i]], pieces.BlackKing):
-                                    if position == i - 2:
-                                        board[i - 1] = board[0]
-                                        board[0] = -0.5
-                                    if position == i + 2:
-                                        board[i + 1] = board[7]
-                                        board[7] = -0.5
-                                existing_pieces[board[i]].selected = False
-                                existing_pieces[board[i]].selected = False
-                                rounds += 1
-                                if board[position] != -0.5:
-                                    all_sprites.remove(existing_pieces[board[position]])
-                                board[position] = board[i]
-                                board[i] = -0.5
-                                promotion(position)
-                                move_board = [-0.5] * 64
-                                break
-
-                elif board[position] != -0.5:
-                    for i in range(len(existing_pieces)):
-                        if existing_pieces[i].selected:
-                            existing_pieces[i].selected = False
-                            for j in range(len(move_board)):
-                                if move_board[j] == -0.25:
-                                    move_board[j] = -0.5
-                            break
-                    if check_square(position).colour == "white" and rounds % 2 == 0 or \
-                            check_square(position).colour == "black" and rounds % 2 != 0:
-                        check_square(position).selected = True
-    for i in range(len(existing_pieces)):
+        elif board[position] != -0.5:
+            for i in range(32):
+                if existing_pieces[i].selected:
+                    existing_pieces[i].selected = False
+                    for j in range(len(move_board)):
+                        if move_board[j] == -0.25:
+                            move_board[j] = -0.5
+                    break
+            if existing_pieces[board[position]].colour == "white" and game_rounds % 2 == 0 or \
+                    existing_pieces[board[position]].colour == "black" and game_rounds % 2 != 0:
+                        existing_pieces[board[position]].selected = True
+    for i in range(32):
         if existing_pieces[i].selected:
 
             move_board = existing_pieces[i].possible_moves(board, existing_pieces)
@@ -310,7 +287,92 @@ def move_piece(board, move_board, existing_pieces, rounds):
             if isinstance(existing_pieces[i], pieces.WhiteKing) or isinstance(existing_pieces[i], pieces.BlackKing):
                 move_board = castling(move_board)
 
-    return board, move_board, existing_pieces, rounds
+    return board, move_board, existing_pieces, game_rounds
+
+
+def evaluate(board, existing_pieces):
+    score = 0
+    for i in range(64):
+        if board[i] != -0.5:
+            if isinstance(existing_pieces[board[i]], pieces.White):
+                score += existing_pieces[board[i]].get_value(board, i)
+            else:
+                score -= existing_pieces[board[i]].get_value(board, i)
+    return score
+
+def find_best_move(inp_board, existing_pieces, colour, iteration):
+    best_board = []
+    if iteration == 2:
+        score = 100000
+        for j in range(64):
+            if inp_board[j] <= -1:
+                move_board = existing_pieces[inp_board[j]].possible_moves(inp_board, existing_pieces)
+                for i in range(64):
+                    for k in range(32):
+                        existing_pieces[k].selected = False
+                    existing_pieces[inp_board[j]].selected = True
+                    temp_board, _, __, ___ = move_piece(inp_board[:], move_board[:], existing_pieces[:], 1, i)
+                    if temp_board != inp_board:
+                        strongest_board = find_best_move(temp_board[:], existing_pieces[:], 0, iteration - 1)
+                    if temp_board != inp_board and evaluate(strongest_board, existing_pieces) < score:
+                        score = evaluate(strongest_board, existing_pieces)
+                        best_board = temp_board
+        for i in range(32):
+            all_sprites.remove(existing_pieces[i])
+        for i in range(64):
+            if best_board[i] != -0.5:
+                all_sprites.add(existing_pieces[best_board[i]])
+        return best_board
+    if iteration == 0:
+        score = -100000
+        for j in range(64):
+            if inp_board[j] <= -1:
+                move_board = existing_pieces[inp_board[j]].possible_moves(inp_board, existing_pieces)
+                for i in range(64):
+                    for k in range(32):
+                        existing_pieces[k].selected = False
+                    existing_pieces[inp_board[j]].selected = True
+                    temp_board, _, __, ___ = move_piece(inp_board[:], move_board[:], existing_pieces[:], 1, i)
+                    if temp_board != inp_board and evaluate(temp_board, existing_pieces) > score:
+                        score = evaluate(temp_board, existing_pieces)
+                        best_board = temp_board[:]
+        return best_board
+    elif colour == 0:
+        score = -100000
+        for j in range(64):
+            if inp_board[j] >= 0:
+                move_board = existing_pieces[inp_board[j]].possible_moves(inp_board, existing_pieces)
+                for i in range(len(move_board)):
+                    for k in range(32):
+                        existing_pieces[k].selected = False
+                    existing_pieces[inp_board[j]].selected = True
+                    temp_board, _, __, ___ = move_piece(inp_board[:], move_board[:], existing_pieces[:], 0, i)
+                    if temp_board != inp_board and evaluate(temp_board, existing_pieces) > score:
+                        score = evaluate(temp_board, existing_pieces)
+                        best_board = temp_board
+        for i in range(64):
+            if best_board[i] <= -1:
+                strongest_board = find_best_move(best_board[:], existing_pieces[:], 1, iteration - 1)
+                return strongest_board
+        return best_board
+
+    else:
+        for j in range(64):
+            if inp_board[j] <= -1:
+                move_board = existing_pieces[inp_board[j]].possible_moves(inp_board, existing_pieces)
+                for i in range(64):
+                    for k in range(32):
+                        existing_pieces[k].selected = False
+                    existing_pieces[inp_board[j]].selected = True
+                    temp_board, _, __, ___ = move_piece(inp_board[:], move_board[:], existing_pieces[:], 1, i)
+                    if temp_board != board:
+                        strongest_board = find_best_move(temp_board, existing_pieces[:], 0, iteration - 1)
+        return strongest_board
+
+
+
+
+
 
 
 while True:
@@ -318,8 +380,25 @@ while True:
         start_game(board)
     draw_board()
     pygame.display.update()
-    board, move_board, existing_pieces, rounds = move_piece(board, move_board, existing_pieces, rounds)
-    for i in range(len(existing_pieces)):
+    if rounds % 2 == 0:
+        for event in pygame.event.get():
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                x_pos, y_pos = pygame.mouse.get_pos()
+                position = (int(x_pos / 100 - 0.25)) + 8 * (int(y_pos / 100 - 0.25))
+                board, move_board, existing_pieces, rounds = move_piece(board, move_board, existing_pieces, rounds,
+                                                                        position)
+                for i in range(32):
+                    all_sprites.remove(existing_pieces[i])
+                for i in range(64):
+                    if board[i] != -0.5:
+                        all_sprites.add(existing_pieces[board[i]])
+    else:
+        rounds += 1
+
+        board = find_best_move(board, existing_pieces, 1, 2)
+        for i in range(32):
+            existing_pieces[i].selected = False
+    for i in range(32):
             if rounds % 2 == 0:
                 if isinstance(existing_pieces[i], pieces.WhitePawn):
                     existing_pieces[i].moved_two = False
