@@ -10,13 +10,13 @@ rounds = 0
 run = True
 board = [-0.5] * 64
 move_board = [-0.5] * 64
-
+last_moved = -1
 
 def start_game(board):
     for i in range(16):
         board[48 + i] = i
     for i in range(16):
-        board[i] = -1 - i
+        board[i] = -i -1
 
 
 white_king = pieces.WhiteKing()
@@ -72,7 +72,9 @@ def draw_board():
     # draws the tiles of the board
     for i in range(8):
         for j in range(8):
-            if (i + j) % 2 == 0:
+            if (i*8+j) == last_moved:
+                pygame.draw.rect(win, (255, 0, 0), (25 + 100 * j, 25 + 100 * i, 100, 100))
+            elif (i + j) % 2 == 0:
                 pygame.draw.rect(win, (255, 255, 255), (25 + 100 * j, 25 + 100 * i, 100, 100))
             else:
                 pygame.draw.rect(win, (50, 50, 50), (25 + 100 * j, 25 + 100 * i, 100, 100))
@@ -168,7 +170,7 @@ def promotion(position):
             all_sprites.add(existing_pieces[board[position]])
 
 
-def castling(move_board):
+def castling(move_board, rounds):
     queenside = False
     kingside = False
     if rounds % 2 == 0:
@@ -208,7 +210,7 @@ def castling(move_board):
                     if board[i] >= 0:
                         potential_moves = existing_pieces[board[i]].possible_moves(board, existing_pieces)
                         if potential_moves[4] == -0.25 or potential_moves[5] == -0.25 or potential_moves[6] == -0.25:
-                            kingsideside = False
+                            kingside = False
         if queenside == True:
             move_board[2] = -0.25
         if kingside == True:
@@ -236,7 +238,6 @@ def move_piece(board, move_board, existing_pieces, game_rounds, position):
                                 board[i + 1] = board[63]
                                 board[63] = -0.5
                         existing_pieces[board[i]].selected = False
-                        existing_pieces[board[i]].move_counter += 1
                         game_rounds += 1
                         board[position] = board[i]
                         board[i] = -0.5
@@ -260,7 +261,6 @@ def move_piece(board, move_board, existing_pieces, game_rounds, position):
                                 board[i + 1] = board[7]
                                 board[7] = -0.5
                         existing_pieces[board[i]].selected = False
-                        existing_pieces[board[i]].move_counter += 1
                         game_rounds += 1
                         board[position] = board[i]
                         board[i] = -0.5
@@ -281,11 +281,10 @@ def move_piece(board, move_board, existing_pieces, game_rounds, position):
                         existing_pieces[board[position]].selected = True
     for i in range(32):
         if existing_pieces[i].selected:
-
             move_board = existing_pieces[i].possible_moves(board, existing_pieces)
             move_board = checkmate_prevent(board, move_board, existing_pieces)
             if isinstance(existing_pieces[i], pieces.WhiteKing) or isinstance(existing_pieces[i], pieces.BlackKing):
-                move_board = castling(move_board)
+                move_board = castling(move_board, game_rounds)
 
     return board, move_board, existing_pieces, game_rounds
 
@@ -300,20 +299,23 @@ def evaluate(board, existing_pieces):
                 score -= existing_pieces[board[i]].get_value(board, i)
     return score
 
-def find_best_move(inp_board, existing_pieces, colour, iteration):
+
+def find_best_move(inp_board, existing_pieces, alpha, beta, iteration):
     best_board = []
-    if iteration == 2:
-        score = 100000
+    if iteration == 3:
+        score = 1000000
         for j in range(64):
             if inp_board[j] <= -1:
                 move_board = existing_pieces[inp_board[j]].possible_moves(inp_board, existing_pieces)
+                if isinstance(existing_pieces[inp_board[j]], pieces.BlackKing):
+                    move_board = castling(move_board, iteration)
                 for i in range(64):
                     for k in range(32):
                         existing_pieces[k].selected = False
                     existing_pieces[inp_board[j]].selected = True
                     temp_board, _, __, ___ = move_piece(inp_board[:], move_board[:], existing_pieces[:], 1, i)
                     if temp_board != inp_board:
-                        strongest_board = find_best_move(temp_board[:], existing_pieces[:], 0, iteration - 1)
+                        strongest_board = find_best_move(temp_board[:], existing_pieces[:], alpha, beta, iteration - 1)
                     if temp_board != inp_board and evaluate(strongest_board, existing_pieces) < score:
                         score = evaluate(strongest_board, existing_pieces)
                         best_board = temp_board
@@ -322,58 +324,54 @@ def find_best_move(inp_board, existing_pieces, colour, iteration):
         for i in range(64):
             if best_board[i] != -0.5:
                 all_sprites.add(existing_pieces[best_board[i]])
+        for i in range(len(existing_pieces)):
+            existing_pieces[i].selected = False
         return best_board
     if iteration == 0:
-        score = -100000
-        for j in range(64):
-            if inp_board[j] <= -1:
-                move_board = existing_pieces[inp_board[j]].possible_moves(inp_board, existing_pieces)
-                for i in range(64):
-                    for k in range(32):
-                        existing_pieces[k].selected = False
-                    existing_pieces[inp_board[j]].selected = True
-                    temp_board, _, __, ___ = move_piece(inp_board[:], move_board[:], existing_pieces[:], 1, i)
-                    if temp_board != inp_board and evaluate(temp_board, existing_pieces) > score:
-                        score = evaluate(temp_board, existing_pieces)
-                        best_board = temp_board[:]
-        return best_board
-    elif colour == 0:
-        score = -100000
+        return inp_board
+    elif iteration % 2 == 0:
+        score = -1000000
         for j in range(64):
             if inp_board[j] >= 0:
                 move_board = existing_pieces[inp_board[j]].possible_moves(inp_board, existing_pieces)
-                for i in range(len(move_board)):
-                    for k in range(32):
-                        existing_pieces[k].selected = False
-                    existing_pieces[inp_board[j]].selected = True
-                    temp_board, _, __, ___ = move_piece(inp_board[:], move_board[:], existing_pieces[:], 0, i)
-                    if temp_board != inp_board and evaluate(temp_board, existing_pieces) > score:
-                        score = evaluate(temp_board, existing_pieces)
-                        best_board = temp_board
-        for i in range(64):
-            if best_board[i] <= -1:
-                strongest_board = find_best_move(best_board[:], existing_pieces[:], 1, iteration - 1)
-                return strongest_board
-        return best_board
-
-    else:
-        for j in range(64):
-            if inp_board[j] <= -1:
-                move_board = existing_pieces[inp_board[j]].possible_moves(inp_board, existing_pieces)
+                if isinstance(existing_pieces[inp_board[j]], pieces.WhiteKing):
+                    move_board = castling(move_board, iteration)
                 for i in range(64):
                     for k in range(32):
                         existing_pieces[k].selected = False
                     existing_pieces[inp_board[j]].selected = True
                     temp_board, _, __, ___ = move_piece(inp_board[:], move_board[:], existing_pieces[:], 1, i)
-                    if temp_board != board:
-                        strongest_board = find_best_move(temp_board, existing_pieces[:], 0, iteration - 1)
-        return strongest_board
+                    if temp_board != inp_board:
+                        strongest_board = find_best_move(temp_board, existing_pieces[:], alpha, beta, iteration - 1)
+                        if score < evaluate(strongest_board, existing_pieces):
+                            best_board = strongest_board
+                            score = evaluate(strongest_board, existing_pieces)
+                        alpha = max(alpha, evaluate(strongest_board, existing_pieces))
+                        if beta <= alpha:
+                            return best_board
+        return best_board
 
-
-
-
-
-
+    else:
+        score = 1000000
+        for j in range(64):
+            if inp_board[j] <= -1:
+                move_board = existing_pieces[inp_board[j]].possible_moves(inp_board, existing_pieces)
+                if isinstance(existing_pieces[inp_board[j]], pieces.BlackKing):
+                    move_board = castling(move_board, iteration)
+                for i in range(64):
+                    for k in range(32):
+                        existing_pieces[k].selected = False
+                    existing_pieces[inp_board[j]].selected = True
+                    temp_board, _, __, ___ = move_piece(inp_board[:], move_board[:], existing_pieces[:], 1, i)
+                    if temp_board != inp_board:
+                        strongest_board = find_best_move(temp_board, existing_pieces[:], alpha, beta, iteration - 1)
+                        if score > evaluate(strongest_board, existing_pieces):
+                            best_board = strongest_board
+                            score = evaluate(strongest_board, existing_pieces)
+                        beta = min(beta, evaluate(strongest_board, existing_pieces))
+                        if beta <= alpha:
+                            return best_board
+        return best_board
 
 while True:
     if rounds == 0:
@@ -385,6 +383,9 @@ while True:
             if event.type == pygame.MOUSEBUTTONDOWN:
                 x_pos, y_pos = pygame.mouse.get_pos()
                 position = (int(x_pos / 100 - 0.25)) + 8 * (int(y_pos / 100 - 0.25))
+                for i in range(len(existing_pieces)):
+                    if existing_pieces[i].selected and existing_pieces[i].possible_moves(board, existing_pieces)[position] == -0.25:
+                        existing_pieces[i].move_counter += 1
                 board, move_board, existing_pieces, rounds = move_piece(board, move_board, existing_pieces, rounds,
                                                                         position)
                 for i in range(32):
@@ -392,12 +393,17 @@ while True:
                 for i in range(64):
                     if board[i] != -0.5:
                         all_sprites.add(existing_pieces[board[i]])
+                last_moved = -1
     else:
         rounds += 1
+        prev_board = board[:]
+        board = find_best_move(board, existing_pieces, -1000000, 1000000, 3)
+        for i in range(len(board)):
+            if board[i] != -0.5 and board[i] != prev_board[i]:
+                last_moved = i
 
-        board = find_best_move(board, existing_pieces, 1, 2)
-        for i in range(32):
-            existing_pieces[i].selected = False
+
+
     for i in range(32):
             if rounds % 2 == 0:
                 if isinstance(existing_pieces[i], pieces.WhitePawn):

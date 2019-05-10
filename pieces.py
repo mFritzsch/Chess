@@ -11,7 +11,6 @@ class AnyPiece(pygame.sprite.Sprite):
         self.rect.y = new_y
 
     def get_value(self, board, position):
-
         return self.point_value + self.piece_square_table[position]
 
 
@@ -64,6 +63,12 @@ class BlackKing(Black):
                         move_board[(x + y * 8 - 9) + i + 8 * j] = -0.25
         return move_board
 
+    def get_value(self, board, position):
+        for i in range(len(board)):
+            if board[i] == 28 or board[i] == 11:
+                return self.point_value + self.piece_square_table[position]
+        return self.point_value + self.endgame_piece_square_table[position]
+
 
 class WhiteKing(White):
     def __init__(self):
@@ -100,6 +105,12 @@ class WhiteKing(White):
                     if move_board[(x + y * 8 - 9) + i + 8 * j] == -0.5 or move_board[(x + y * 8 - 9) + i + 8 * j] <= -1:
                         move_board[(x + y * 8 - 9) + i + 8 * j] = -0.25
         return move_board
+
+    def get_value(self, board, position):
+        for i in range(len(board)):
+            if board[i] == 28 or board[i] == 11:
+                return self.point_value + self.piece_square_table[position]
+        return self.point_value + self.endgame_piece_square_table[position]
 
 
 class BlackQueen(Black):
@@ -448,7 +459,7 @@ class BlackKnight(Black):
         move_board = board[:]
 
         if x < 6:
-            if (x + 8 * y) + 10 < 63:
+            if (x + 8 * y) + 10 <= 63:
                 if move_board[(x + 8 * y) + 10] == -0.5 or move_board[(x + 8 * y) + 10] >= 0:
                     move_board[(x + 8 * y) + 10] = -0.25
             if (x + 8 * y) - 6 > 0:
@@ -456,7 +467,7 @@ class BlackKnight(Black):
                     move_board[(x + 8 * y) - 6] = -0.25
 
         if x < 7:
-            if (x + 8 * y) - 15 > 0:
+            if (x + 8 * y) - 15 >= 0:
                 if move_board[(x + 8 * y) - 15] == -0.5 or move_board[(x + 8 * y) - 15] >= 0:
                     move_board[(x + 8 * y) - 15] = -0.25
             if (x + 8 * y) + 17 < 63:
@@ -464,7 +475,7 @@ class BlackKnight(Black):
                     move_board[(x + 8 * y) + 17] = -0.25
 
         if x > 0:
-            if (x + 8 * y) - 17 > 0:
+            if (x + 8 * y) - 17 >= 0:
                 if move_board[(x + 8 * y) - 17] == -0.5 or move_board[(x + 8 * y) - 17] >= 0:
                     move_board[(x + 8 * y) - 17] = -0.25
             if (x + 8 * y) + 15 < 63:
@@ -472,7 +483,7 @@ class BlackKnight(Black):
                     move_board[(x + 8 * y) + 15] = -0.25
 
         if x >= 2:
-            if (x + 8 * y) + 6 < 63:
+            if (x + 8 * y) + 6 <= 63:
                 if move_board[(x + 8 * y) + 6] == -0.5 or move_board[(x + 8 * y) + 6] >= 0:
                     move_board[(x + 8 * y) + 6] = -0.25
             if (x + 8 * y) - 10 > 0:
@@ -504,7 +515,7 @@ class WhiteKnight(White):
         move_board = board[:]
 
         if x < 6:
-            if (x + 8 * y) + 10 < 63:
+            if (x + 8 * y) + 10 <= 63:
                 if move_board[(x + 8 * y) + 10] == -0.5 or move_board[(x + 8 * y) + 10] <= -1:
                     move_board[(x + 8 * y) + 10] = -0.25
             if (x + 8 * y) - 6 > 0:
@@ -512,7 +523,7 @@ class WhiteKnight(White):
                     move_board[(x + 8 * y) - 6] = -0.25
 
         if x < 7:
-            if (x + 8 * y) - 15 > 0:
+            if (x + 8 * y) - 15 >= 0:
                 if move_board[(x + 8 * y) - 15] == -0.5 or move_board[(x + 8 * y) - 15] <= -1:
                     move_board[(x + 8 * y) - 15] = -0.25
             if (x + 8 * y) + 17 < 63:
@@ -520,7 +531,7 @@ class WhiteKnight(White):
                     move_board[(x + 8 * y) + 17] = -0.25
 
         if x > 0:
-            if (x + 8 * y) - 17 > 0:
+            if (x + 8 * y) - 17 >= 0:
                 if move_board[(x + 8 * y) - 17] == -0.5 or move_board[(x + 8 * y) - 17] <= -1:
                     move_board[(x + 8 * y) - 17] = -0.25
             if (x + 8 * y) + 15 < 63:
@@ -528,7 +539,7 @@ class WhiteKnight(White):
                     move_board[(x + 8 * y) + 15] = -0.25
 
         if x >= 2:
-            if (x + 8 * y) + 6 < 63:
+            if (x + 8 * y) + 6 <= 63:
                 if move_board[(x + 8 * y) + 6] == -0.5 or move_board[(x + 8 * y) + 6] <= -1:
                     move_board[(x + 8 * y) + 6] = -0.25
             if (x + 8 * y) - 10 > 0:
@@ -547,7 +558,7 @@ class BlackRook(Black):
         self.point_value = 500
         self.piece_square_table = [0, 0, 0, 5, 5, 0, 0, 0,
                                    - 5, 0, 0, 0, 0, 0, 0, -5,
-                                   -5, 0, 0, 0, 0, 0, 0, -5
+                                   -5, 0, 0, 0, 0, 0, 0, -5,
                                    - 5, 0, 0, 0, 0, 0, 0, -5,
                                    -5, 0, 0, 0, 0, 0, 0, -5,
                                    -5, 0, 0, 0, 0, 0, 0, -5,
