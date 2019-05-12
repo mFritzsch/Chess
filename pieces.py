@@ -306,7 +306,6 @@ class WhiteQueen(White):
                     break
                 if move_board[(x + y * 8) - (i+1) * 7] >= 0:
                     break
-
         return move_board
 
 

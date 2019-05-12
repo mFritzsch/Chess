@@ -6,11 +6,14 @@ pygame.init()
 win = pygame.display.set_mode((850, 850))
 pygame.display.set_caption("chess")
 
+
 rounds = 0
 run = True
 board = [-0.5] * 64
 move_board = [-0.5] * 64
 last_moved = -1
+game_over = False
+
 
 def start_game(board):
     for i in range(16):
@@ -63,7 +66,7 @@ existing_pieces = [white_pawn1, white_pawn2, white_pawn3, white_pawn4, white_paw
                    ]
 all_sprites.add(existing_pieces)
 
-def draw_board():
+def draw_board(board):
     # draws the outlines of the board
     pygame.draw.rect(win, (255, 255, 255), (20, 20, 5, 810))
     pygame.draw.rect(win, (255, 255, 255), (825, 20, 5, 810))
@@ -94,16 +97,7 @@ def draw_board():
     all_sprites.draw(win)
 
 
-# do I need this?
-def hostile(a, b):
-    if a.colour == "white":
-        if b.colour == "black":
-            return True
-    else:
-        if b.colour == "white":
-            return True
-
-
+# removes moves from the move board which allow a checkmate
 def checkmate_prevent(board, move_board, existing_pieces):
     for j in range(64):
         if board[j] <= -1:
@@ -115,7 +109,10 @@ def checkmate_prevent(board, move_board, existing_pieces):
                         test_board[j] = -0.5
                         for a in range(len(test_board)):
                             if test_board[a] >= 0:
-                                test_move_board = existing_pieces[test_board[a]].possible_moves(test_board, existing_pieces)
+                                if a == 16 and i == 8:
+                                    test_move_board = existing_pieces[test_board[a]].possible_moves(test_board, existing_pieces)
+                                test_move_board = existing_pieces[test_board[a]].possible_moves(test_board,
+                                                                                                existing_pieces)
                                 for k in range(len(test_board)):
                                     if test_board[k] == -5:
                                         if test_move_board[k] == -0.25:
@@ -170,6 +167,7 @@ def promotion(position):
             all_sprites.add(existing_pieces[board[position]])
 
 
+# Adds castling moves to move_board if the conditions are met
 def castling(move_board, rounds):
     queenside = False
     kingside = False
@@ -217,6 +215,9 @@ def castling(move_board, rounds):
             move_board[6] = -0.25
     return move_board
 
+
+# takes a positition on the board and either moves the selected piece to the square or
+# selects the piece on the square if there is one
 def move_piece(board, move_board, existing_pieces, game_rounds, position):
     if position < 64:
         if move_board[position] == -0.25:
@@ -300,9 +301,40 @@ def evaluate(board, existing_pieces):
     return score
 
 
+def checkmate(board, existing_pieces, rounds):
+    for i in range(len(board)):
+        move_board = [-0.5] * 64
+        for piece in existing_pieces:
+            piece.selected = False
+        if rounds % 2 == 0:
+            if board[i] >= 0:
+                board, move_board, existing_pieces, new_rounds = move_piece(board, move_board, existing_pieces, rounds,
+                                                                            i)
+                for square in move_board:
+                    if square == -0.25:
+                        existing_pieces[board[i]].selected = False
+                        return False
+        else:
+            if board[i] <= -1:
+                existing_pieces[board[i]].selected = True
+                move_board = existing_pieces[board[i]].possible_moves(board, existing_pieces)
+                move_board = checkmate_prevent(board, move_board, existing_pieces)
+                for square in move_board:
+                    if square == -0.25:
+                        existing_pieces[board[i]].selected = False
+                        return False
+    for piece in existing_pieces:
+        piece.selected = False
+    return True
+
 def find_best_move(inp_board, existing_pieces, alpha, beta, iteration):
+    draw_board(inp_board)
+    pygame.display.update()
+    gameover = checkmate(inp_board, existing_pieces, iteration)
     best_board = []
-    if iteration == 3:
+    if iteration == 0 or gameover:
+        return inp_board
+    elif iteration == 3:
         score = 1000000
         for j in range(64):
             if inp_board[j] <= -1:
@@ -313,12 +345,13 @@ def find_best_move(inp_board, existing_pieces, alpha, beta, iteration):
                     for k in range(32):
                         existing_pieces[k].selected = False
                     existing_pieces[inp_board[j]].selected = True
+                    move_board = checkmate_prevent(inp_board, move_board, existing_pieces)
                     temp_board, _, __, ___ = move_piece(inp_board[:], move_board[:], existing_pieces[:], 1, i)
                     if temp_board != inp_board:
                         strongest_board = find_best_move(temp_board[:], existing_pieces[:], alpha, beta, iteration - 1)
-                    if temp_board != inp_board and evaluate(strongest_board, existing_pieces) < score:
-                        score = evaluate(strongest_board, existing_pieces)
-                        best_board = temp_board
+                        if evaluate(strongest_board, existing_pieces) < score:
+                            score = evaluate(strongest_board, existing_pieces)
+                            best_board = temp_board
         for i in range(32):
             all_sprites.remove(existing_pieces[i])
         for i in range(64):
@@ -327,8 +360,6 @@ def find_best_move(inp_board, existing_pieces, alpha, beta, iteration):
         for i in range(len(existing_pieces)):
             existing_pieces[i].selected = False
         return best_board
-    if iteration == 0:
-        return inp_board
     elif iteration % 2 == 0:
         score = -1000000
         for j in range(64):
@@ -340,6 +371,7 @@ def find_best_move(inp_board, existing_pieces, alpha, beta, iteration):
                     for k in range(32):
                         existing_pieces[k].selected = False
                     existing_pieces[inp_board[j]].selected = True
+                    move_board = checkmate_prevent(inp_board, move_board, existing_pieces)
                     temp_board, _, __, ___ = move_piece(inp_board[:], move_board[:], existing_pieces[:], 1, i)
                     if temp_board != inp_board:
                         strongest_board = find_best_move(temp_board, existing_pieces[:], alpha, beta, iteration - 1)
@@ -362,6 +394,7 @@ def find_best_move(inp_board, existing_pieces, alpha, beta, iteration):
                     for k in range(32):
                         existing_pieces[k].selected = False
                     existing_pieces[inp_board[j]].selected = True
+                    move_board = checkmate_prevent(inp_board, move_board, existing_pieces)
                     temp_board, _, __, ___ = move_piece(inp_board[:], move_board[:], existing_pieces[:], 1, i)
                     if temp_board != inp_board:
                         strongest_board = find_best_move(temp_board, existing_pieces[:], alpha, beta, iteration - 1)
@@ -373,10 +406,11 @@ def find_best_move(inp_board, existing_pieces, alpha, beta, iteration):
                             return best_board
         return best_board
 
-while True:
+
+while game_over == False:
     if rounds == 0:
         start_game(board)
-    draw_board()
+    draw_board(board)
     pygame.display.update()
     if rounds % 2 == 0:
         for event in pygame.event.get():
@@ -386,8 +420,12 @@ while True:
                 for i in range(len(existing_pieces)):
                     if existing_pieces[i].selected and existing_pieces[i].possible_moves(board, existing_pieces)[position] == -0.25:
                         existing_pieces[i].move_counter += 1
-                board, move_board, existing_pieces, rounds = move_piece(board, move_board, existing_pieces, rounds,
+                board, move_board, existing_pieces, new_rounds = move_piece(board, move_board, existing_pieces, rounds,
                                                                         position)
+                if new_rounds == rounds + 1:
+                    rounds = new_rounds
+                    draw_board(board)
+                    game_over = checkmate(board, existing_pieces, rounds)
                 for i in range(32):
                     all_sprites.remove(existing_pieces[i])
                 for i in range(64):
@@ -395,15 +433,20 @@ while True:
                         all_sprites.add(existing_pieces[board[i]])
                 last_moved = -1
     else:
-        rounds += 1
         prev_board = board[:]
         board = find_best_move(board, existing_pieces, -1000000, 1000000, 3)
+        rounds += 1
+        game_over = checkmate(board, existing_pieces, rounds)
+
         for i in range(len(board)):
             if board[i] != -0.5 and board[i] != prev_board[i]:
                 last_moved = i
-
-
-
+        if board[4] != -5:
+            existing_pieces[-5].move_counter = 1
+        if board[0] != -1:
+            existing_pieces[-1].move_counter = 1
+            if board[7] != -8:
+                existing_pieces[-8].move_counter = 1
     for i in range(32):
             if rounds % 2 == 0:
                 if isinstance(existing_pieces[i], pieces.WhitePawn):
@@ -412,4 +455,4 @@ while True:
                 if isinstance(existing_pieces[i], pieces.BlackPawn):
                     existing_pieces[i].moved_two = False
 
-# pygame.quit()
+pygame.quit()
