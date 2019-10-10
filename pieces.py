@@ -10,6 +10,9 @@ class AnyPiece(pygame.sprite.Sprite):
         self.rect.x = new_x
         self.rect.y = new_y
 
+    def get_x_and_y(self):
+        return int((self.rect.x - 25) / 100) + int((self.rect.y - 25) / 100) * 8
+
     def get_value(self, board, position):
         return self.point_value + self.piece_square_table[position]
 
@@ -51,9 +54,9 @@ class BlackKing(Black):
                                            -30, -20, -10, 0, 0, -10, -20, -30,
                                            -50, -40, -30, -20, -20, -30, -40, -50]
 
-    def possible_moves(self, board, existing_pieces):
-        x = int((self.rect.x - 25) / 100)
-        y = int((self.rect.y - 25) / 100)
+    def possible_moves(self, board, existing_pieces, position):
+        x = position % 8
+        y = int((position - position % 8) / 8)
         move_board = board[:]
 
         for i in range(3):
@@ -94,9 +97,9 @@ class WhiteKing(White):
                                             -30,-30,  0,  0,  0,  0,-30,-30,
                                             -50,-30,-30,-30,-30,-30,-30,-50]
 
-    def possible_moves(self, board, existing_pieces):
-        x = int((self.rect.x - 25) / 100)
-        y = int((self.rect.y - 25) / 100)
+    def possible_moves(self, board, existing_pieces, position):
+        x = position % 8
+        y = int((position - position % 8) / 8)
         move_board = board[:]
 
         for i in range(3):
@@ -129,9 +132,9 @@ class BlackQueen(Black):
                                    -10, 0, 0, 0, 0, 0, 0, -10,
                                    -20, -10, -10, -5, -5, -10, -10, -20]
 
-    def possible_moves(self, board, existing_pieces):
-        x = int((self.rect.x - 25) / 100)
-        y = int((self.rect.y - 25) / 100)
+    def possible_moves(self, board, existing_pieces, position):
+        x = position % 8
+        y = int((position - position % 8) / 8)
         move_board = board[:]
         for i in range(y):
             if move_board[((x + y * 8) - 8 * (i + 1))] == -0.5:
@@ -228,9 +231,9 @@ class WhiteQueen(White):
                                     -10,  0,  5,  0,  0,  0,  0,-10,
                                     -20,-10,-10, -5, -5,-10,-10,-20]
 
-    def possible_moves(self, board, existing_pieces):
-        x = int((self.rect.x - 25) / 100)
-        y = int((self.rect.y - 25) / 100)
+    def possible_moves(self, board, existing_pieces, position):
+        x = position % 8
+        y = int((position - position % 8) / 8)
         move_board = board[:]
         for i in range(y):
             if move_board[((x + y * 8) - 8 * (i+1))] == -0.5:
@@ -325,9 +328,9 @@ class BlackBishop(Black):
                                    -10, 0, 0, 0, 0, 0, 0, -10,
                                    -20, -10, -10, -10, -10, -10, -10, -20]
 
-    def possible_moves(self, board, existing_pieces):
-        x = int((self.rect.x - 25) / 100)
-        y = int((self.rect.y - 25) / 100)
+    def possible_moves(self, board, existing_pieces, position):
+        x = position % 8
+        y = int((position - position % 8) / 8)
         move_board = board[:]
 
         for i in range(8):
@@ -389,9 +392,9 @@ class WhiteBishop(White):
                                     -10,  5,  0,  0,  0,  0,  5,-10,
                                     -20,-10,-10,-10,-10,-10,-10,-20]
 
-    def possible_moves(self, board, existing_pieces):
-        x = int((self.rect.x - 25) / 100)
-        y = int((self.rect.y - 25) / 100)
+    def possible_moves(self, board, existing_pieces, position):
+        x = position % 8
+        y = int((position - position % 8) / 8)
         move_board = board[:]
 
         for i in range(8):
@@ -452,9 +455,9 @@ class BlackKnight(Black):
                                    -40, -20, 0, 0, 0, 0, -20, -40,
                                    -50, -40, -30, -30, -30, -30, -40, -50]
 
-    def possible_moves(self, board, existing_pieces):
-        x = int((self.rect.x - 25) / 100)
-        y = int((self.rect.y - 25) / 100)
+    def possible_moves(self, board, existing_pieces, position):
+        x = position % 8
+        y = int((position - position % 8) / 8)
         move_board = board[:]
 
         if x < 6:
@@ -508,9 +511,9 @@ class WhiteKnight(White):
                                     -40,-20,  0,  5,  5,  0,-20,-40,
                                     -50,-40,-30,-30,-30,-30,-40,-50]
 
-    def possible_moves(self, board, existing_pieces):
-        x = int((self.rect.x - 25) / 100)
-        y = int((self.rect.y - 25) / 100)
+    def possible_moves(self, board, existing_pieces, position):
+        x = position % 8
+        y = int((position - position % 8) / 8)
         move_board = board[:]
 
         if x < 6:
@@ -564,9 +567,9 @@ class BlackRook(Black):
                                    5, 10, 10, 10, 10, 10, 10, 5,
                                    0, 0, 0, 0, 0, 0, 0, 0]
 
-    def possible_moves(self, board, existing_pieces):
-        x = int((self.rect.x - 25) / 100)
-        y = int((self.rect.y - 25) / 100)
+    def possible_moves(self, board, existing_pieces, position):
+        x = position % 8
+        y = int((position - position % 8) / 8)
         move_board = board[:]
         for i in range(y):
             if move_board[((x + y * 8) - 8 * (i + 1))] == -0.5:
@@ -623,9 +626,9 @@ class WhiteRook(White):
                                  -5,  0,  0,  0,  0,  0,  0, -5,
                                   0,  0,  0,  5,  5,  0,  0,  0]
 
-    def possible_moves(self, board, existing_pieces):
-        x = int((self.rect.x - 25) / 100)
-        y = int((self.rect.y - 25) / 100)
+    def possible_moves(self, board, existing_pieces, position):
+        x = position % 8
+        y = int((position - position % 8) / 8)
         move_board = board[:]
         for i in range(y):
             if move_board[((x + y * 8) - 8 * (i+1))] == -0.5:
@@ -683,9 +686,9 @@ class BlackPawn(Black):
                                     50, 50, 50, 50, 50, 50, 50, 50,
                                      0,  0,  0,  0,  0,  0,  0,  0]
 
-    def possible_moves(self, board, existing_pieces):
-        x = int((self.rect.x - 25) / 100)
-        y = int((self.rect.y - 25) / 100)
+    def possible_moves(self, board, existing_pieces, position):
+        x = position % 8
+        y = int((position - position % 8) / 8)
         move_board = board[:]
         if (x+y*8)+8 < 64:
             if move_board[(x+y*8)+8] == -0.5:
@@ -726,9 +729,9 @@ class WhitePawn(White):
                                      5, 10, 10,-20,-20, 10, 10,  5,
                                      0,  0,  0,  0,  0,  0,  0,  0]
 
-    def possible_moves(self, board, existing_pieces):
-        x = int((self.rect.x - 25) / 100)
-        y = int((self.rect.y - 25) / 100)
+    def possible_moves(self, board, existing_pieces, position):
+        x = position % 8
+        y = int((position - position % 8) / 8)
         move_board = board[:]
         if (x + y * 8) - 8 >= 0:
             if move_board[(x+y*8)-8] == -0.5:
